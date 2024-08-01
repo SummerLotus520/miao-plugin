@@ -30,7 +30,14 @@ const Render = {
           sys: {
             scale: Cfg.scale(cfg.scale || 1)
           },
-          copyright: `Created By ${Version.name}<span class="version">${Version.yunzai}</span>${pluginName}</span>`
+            copyright: `Created By ${Version.name}<span class="version">${Version.yunzai}</span>${pluginName}</span><br>
+<span style="font-weight: bold; font-size: larger;">
+  <span style="color: #00BFFF;">机器人主人：</span>
+  <span style="color: #90ee90;">荷花</span>
+  <span style="color: #00BFFF;"> 后续使用加群：</span>
+  <span style="color: #aa381e;">702211431</span>
+</span>`
+
         }
       }
     })
