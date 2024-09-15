@@ -193,6 +193,19 @@ export default function (step, staticStep) {
       refine: {
         a3Dmg: step(28, 13)
       }
-    }]
+    }],
+    冲浪时光: [staticStep('hpPct', 20), {
+      title: '施放元素战技后，普通攻击造成的伤害提升[dmg]%',
+      refine: {
+        dmg: step(12 * 4)
+      }
+    }],
+    木棉之环: {
+      title: '施放元素战技时，基于生命值提升普攻造成的伤害[aDmg]%',
+      sort: 9,
+      data: {
+        aDmg: ({ attr, calc, refine }) => Math.min(Math.floor(calc(attr.hp) / 1000) * step(0.6, 0.1)[refine], step(16)[refine])
+      }
+    }
   }
 }
