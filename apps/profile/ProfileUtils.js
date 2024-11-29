@@ -53,7 +53,7 @@ export async function getOriginalPicture (e) {
 
       if (imgPath && imgPath.img) {
         e.reply(segment.image(`file://${miaoPath}/resources/${decodeURIComponent(imgPath.img)}`), false, { recallMsg: 30 })
-        e.reply('机器人维护不易，服务器成本较高，原图等功能对服务器资源消耗大，捐赠以获取更好的体验以及支持机器人继续维护运行。如您有意赞助请联系荷花（1102305070）或加入荷花的小群以了解更多。')
+        e.reply('机器人维护不易，服务器成本较高，原图等功能对服务器资源消耗大，捐赠以获取更好的体验以及支持机器人继续维护运行。如您有意赞助请联系荷花（1102305070）或加入荷花的小群以了解更多。', false, { recallMsg: 30 })
         return true
       }
     }
