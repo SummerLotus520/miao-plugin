@@ -1,7 +1,6 @@
 import { Cfg } from '#miao'
 import { MysApi } from '#miao.models'
 import { miaoPath } from '#miao.path'
-
 /** 获取角色卡片的原图 */
 export async function getOriginalPicture (e) {
   let source
@@ -26,9 +25,12 @@ export async function getOriginalPicture (e) {
       return false
     }
   }
+
   let originalPic = Cfg.get('originalPic') * 1
+
   if (source) {
     let imgPath = await redis.get(`miao:original-picture:${source.message_id}`)
+
     if (imgPath) {
       try {
         if (imgPath[0] === '{') {
@@ -36,8 +38,8 @@ export async function getOriginalPicture (e) {
         } else {
           imgPath = { img: imgPath, type: '' }
         }
-      } catch (e) {
-      }
+      } catch (error) {}
+
       if (!e.isMaster) {
         if (imgPath.type === 'character' && [2, 0].includes(originalPic)) {
           e.reply('已禁止获取角色原图...')
@@ -48,15 +50,18 @@ export async function getOriginalPicture (e) {
           return true
         }
       }
+
       if (imgPath && imgPath.img) {
         e.reply(segment.image(`file://${miaoPath}/resources/${decodeURIComponent(imgPath.img)}`), false, { recallMsg: 30 })
+        e.reply('机器人维护不易，服务器成本较高，原图等功能对服务器资源消耗大，捐赠以获取更好的体验以及支持机器人继续维护运行。如您有意赞助请联系荷花（1102305070）或加入荷花的小群以了解更多。')
+        return true
       }
-      return true
     }
     // 对at错图像的增加嘲讽...
     e.reply(segment.image(`file://${miaoPath}/resources/common/face/what.jpg`))
     return false
   }
+
   e.reply('消息太过久远了，俺也忘了原图是啥了，下次早点来吧~')
   return false
 }
