@@ -52,13 +52,13 @@ export async function getOriginalPicture (e) {
       }
 
       if (imgPath && imgPath.img) {
-        e.reply(segment.image(`file://${miaoPath}/resources/${decodeURIComponent(imgPath.img)}`), false, { recallMsg: 30 })
-        e.reply('机器人维护不易，服务器成本较高，原图等功能对服务器资源消耗大，捐赠以获取更好的体验以及支持机器人继续维护运行。如您有意赞助请联系荷花（1102305070）或加入荷花的小群以了解更多。', false, { recallMsg: 30 })
+        e.reply(segment.image(`file://${miaoPath}/resources/${decodeURIComponent(imgPath.img)}`), false, { recallMsg: 120 })
+        e.reply('机器人维护不易，服务器成本较高，原图等功能对服务器资源消耗大，捐赠以获取更好的体验以及支持机器人继续维护运行。如您有意赞助请联系荷花（1102305070）或加入荷花的小群以了解更多。', false,)
         return true
       }
     }
     // 对at错图像的增加嘲讽...
-    e.reply(segment.image(`file://${miaoPath}/resources/common/face/what.jpg`))
+    e.reply('由于服务器配置不足，缓存清理频率较高，该消息缓存已被清理，消息已失效，无法追踪原图。机器人维护不易，服务器成本较高，原图等功能对服务器资源消耗大，捐赠以获取更好的体验以及支持机器人继续维护运行。如您有意赞助请联系荷花（1102305070）或加入荷花的小群以了解更多。', false,)
     return false
   }
 
