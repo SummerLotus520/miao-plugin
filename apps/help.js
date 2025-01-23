@@ -10,7 +10,7 @@ let app = App.init({
 app.reg({
   help: {
     rule: /^(\/|#)?(喵喵)?(命令|帮助|菜单|help|说明|功能|指令|使用说明)$/,
-    fn: Help.render,
+    fn: Help.text,
     desc: '【#/帮助】 #/喵喵帮助'
   },
   version: {
