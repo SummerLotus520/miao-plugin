@@ -181,7 +181,7 @@ const ProfileList = {
 
     let user = e?.runtime?.user || {}
     if (!user.hasCk && !e.isMaster) {
-      e.reply('为确保数据安全，目前仅允许绑定CK用户删除自己UID的面板数据，请联系Bot主人删除...')
+      e.reply('为确保数据安全，目前仅允许扫码登录用户删除自己UID的面板数据，请联系Bot主人删除...')
       return true
     }
 

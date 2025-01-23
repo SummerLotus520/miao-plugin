@@ -43,8 +43,8 @@ export default class ProfileReq extends Base {
     let serv = this.serv
     let extra = serv.name ? `当前面板服务${serv.name}，` : ''
     const msgs = {
-      error: `UID${this.uid}更新面板失败，${extra}\n可能是面板服务维护中，请稍后重试...`,
-      empty: '请将角色放置在【游戏内】角色展柜，并打开【显示详情】，等待5分钟重新获取面板'
+      error: `UID${this.uid}更新面板失败，${extra}\n可能是面板服务维护中，请使用/#扫码登录/绑定Stoken之后直接使用米游社接口的/#更新面板/`,
+      empty: '展柜为空，请使用/#扫码登录/绑定Stoken之后直接使用米游社接口的/#更新面板/'
     }
     msg = msgs[msg] || msg
     this.msg(msg)

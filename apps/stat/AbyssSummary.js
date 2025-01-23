@@ -11,7 +11,7 @@ export async function AbyssSummary (e) {
   let mys = await MysApi.init(e, 'all')
   if (!mys || !mys.uid) {
     if (isMatch) {
-      e.reply(`请绑定ck后再使用${e.original_msg || e.msg}`)
+      e.reply(`请#扫码登录后再使用${e.original_msg || e.msg}`)
     }
     return false
   }
@@ -29,7 +29,7 @@ export async function AbyssSummary (e) {
     } else if (lvs && lvs.battles && lvs.battles.length === 0) {
       if (!mys.isSelfCookie) {
         if (isMatch) {
-          e.reply(`请绑定ck后再使用${e.original_msg || e.msg}`)
+          e.reply(`请#扫码登录后再使用${e.original_msg || e.msg}`)
         }
         return false
       }

@@ -11,7 +11,7 @@ export async function RoleCombatSummary (e) {
   let mys = await MysApi.init(e, 'cookie')
   if (!mys || !mys.uid) {
     if (isMatch) {
-      e.reply(`请绑定ck后再使用${e.original_msg || e.msg}`)
+      e.reply(`请#扫码登录后再使用${e.original_msg || e.msg}`)
     }
     return false
   }

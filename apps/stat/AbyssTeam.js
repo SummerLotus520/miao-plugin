@@ -6,7 +6,7 @@ import { Character, MysApi, Player } from '#miao.models'
 export async function AbyssTeam (e) {
   let mys = await MysApi.init(e, 'all')
   if (!mys || !mys.uid) {
-    e.reply(`请绑定ck后再使用${e.original_msg || e.msg}`)
+    e.reply(`请#扫码登录后再使用${e.original_msg || e.msg}`)
     return false
   }
   let player = Player.create(e)
