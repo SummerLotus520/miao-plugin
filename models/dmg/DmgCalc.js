@@ -49,10 +49,13 @@ let DmgCalc = {
     }
 
     if (/^scene,.*/.test(ele) || /.*,scene$/.test(ele) || ele === 'scene') {
-      dmgNum = 1
-       if (ele !== 'scene') {
-         ele = ele.replace(/(,)?scene(,)?/g, "")
-       }
+      let dmgPct = attr.staticAttrPct.dmgPct / 100
+      if (dmgPct > 0) {
+        dmgNum = (dmgNum - dmgPct) < 1 ? 1 : (dmgNum - dmgPct)
+      }
+      if (ele !== 'scene') {
+        ele = ele.replace(/(,)?scene(,)?/g, "")
+      }
     }
 
     // 易伤区
@@ -190,7 +193,7 @@ let DmgCalc = {
       case 'burgeon':
       case 'hyperBloom': {
         eleBase *= eleBaseDmg[level]
-        ret = { avg: (eleBase + fyplus) * eleNum * kNum }
+        ret = { avg: (eleBase * eleNum + fyplus) * kNum }
         break
       }
 
