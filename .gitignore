@@ -18,3 +18,7 @@
 /resources/profile/super-character/*
 /resources/profile/normal-character/*
 /node_modules/
+# VSCode & Visual Studio
+.vscode/
+.vs/
+*.code-workspace

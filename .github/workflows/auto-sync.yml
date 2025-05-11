@@ -1,0 +1,43 @@
+name: Auto Sync Miao-Plugin Updates
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # 每 6 小时自动同步
+  workflow_dispatch:        # 支持手动触发
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout master branch
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Add upstream remote and fetch
+        run: |
+          git remote add upstream https://github.com/yoimiya-kokomi/miao-plugin.git
+          git fetch upstream
+
+      - name: Configure Git identity
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Merge upstream/master into master
+        run: |
+          git merge upstream/master --no-edit --allow-unrelated-histories || echo "::warning:: Merge conflict detected"
+          git push origin master
+
+      - name: Send DingTalk notification
+        if: always()
+        env:
+          STATUS: ${{ job.status }}
+          DINGTALK_WEBHOOK: ${{ secrets.DINGTALK_WEBHOOK }}
+        run: |
+          curl -s -X POST \
+            -H "Content-Type: application/json" \
+            -d "{\"msgtype\": \"text\", \"text\": {\"content\": \"BiliBili\nMiao-Plugin 自动同步状态：${STATUS}\"}}" \
+            "${DINGTALK_WEBHOOK}"
