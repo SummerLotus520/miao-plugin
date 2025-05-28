@@ -18,7 +18,8 @@ let DmgAttr = {
       ret = lodash.merge({}, originalAttr)
     }
 
-    lodash.forEach('atk,def,hp'.split(','), (key) => {
+    // 基础属性
+    lodash.forEach('atk,def,hp,speed'.split(','), (key) => {
       ret[key] = AttrItem.create(originalAttr?.[key] || {
         base: attr[`${key}Base`] * 1 || 0,
         plus: attr[key] * 1 - attr[`${key}Base`] * 1 || 0,
@@ -26,7 +27,7 @@ let DmgAttr = {
       })
     })
 
-    lodash.forEach((game === 'gs' ? 'mastery,recharge,cpct,cdmg,heal,dmg,phy' : 'speed,recharge,cpct,cdmg,heal,dmg,enemydmg,effPct,effDef,stance').split(','), (key) => {
+    lodash.forEach((game === 'gs' ? 'mastery,recharge,cpct,cdmg,heal,dmg,phy' : 'recharge,cpct,cdmg,heal,dmg,enemydmg,effPct,effDef,stance').split(','), (key) => {
       ret[key] = AttrItem.create(originalAttr?.[key] || {
         base: attr[key] * 1 || 0,
         plus: 0,
@@ -86,6 +87,7 @@ let DmgAttr = {
 
   calcAttr ({ originalAttr, buffs, meta, artis, params = {}, incAttr = '', reduceAttr = '', talent = '', game = 'gs' }) {
     let attr = DmgAttr.getAttr({ originalAttr, game })
+    attr.characterName = meta.characterName
     let msg = []
     let { attrMap } = Meta.getMeta(game, 'arti')
 
