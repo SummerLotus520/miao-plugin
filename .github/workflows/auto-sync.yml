@@ -2,8 +2,11 @@ name: Auto Sync Miao-Plugin Updates
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # 每 6 小时自动同步
-  workflow_dispatch:        # 支持手动触发
+    - cron: '0 16 * * *'  # 北京时间 00:00
+    - cron: '0 22 * * *'  # 北京时间 06:00
+    - cron: '0 4  * * *'  # 北京时间 12:00
+    - cron: '0 10 * * *'  # 北京时间 18:00
+  workflow_dispatch:
 
 jobs:
   sync:
@@ -18,7 +21,7 @@ jobs:
 
       - name: Add upstream remote and fetch
         run: |
-          git remote add upstream https://github.com/yoimiya-kokomi/miao-plugin.git
+          git remote | grep upstream || git remote add upstream https://github.com/yoimiya-kokomi/miao-plugin.git
           git fetch upstream
 
       - name: Configure Git identity
@@ -27,17 +30,26 @@ jobs:
           git config --global user.email "actions@github.com"
 
       - name: Merge upstream/master into master
+        id: merge
         run: |
-          git merge upstream/master --no-edit --allow-unrelated-histories || echo "::warning:: Merge conflict detected"
-          git push origin master
+          OUTPUT=$(git merge upstream/master --no-edit --allow-unrelated-histories 2>&1 || true)
+          echo "$OUTPUT"
+          echo "merge_result<<EOF" >> $GITHUB_OUTPUT
+          echo "$OUTPUT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          git push origin master || true
 
       - name: Send DingTalk notification
         if: always()
-        env:
-          STATUS: ${{ job.status }}
-          DINGTALK_WEBHOOK: ${{ secrets.DINGTALK_WEBHOOK }}
         run: |
-          curl -s -X POST \
-            -H "Content-Type: application/json" \
-            -d "{\"msgtype\": \"text\", \"text\": {\"content\": \"BiliBili\nMiao-Plugin 自动同步状态：${STATUS}\"}}" \
-            "${DINGTALK_WEBHOOK}"
+          STATUS="${{ job.status }}"
+          REPO="${{ github.repository }}"
+          OUTPUT=$(echo "${{ steps.merge.outputs.merge_result }}" | tail -n 10)
+          curl -s -X POST "${{ secrets.DINGTALK_WEBHOOK }}" \
+          -H "Content-Type: application/json" \
+          -d '{
+                "msgtype": "text",
+                "text": {
+                  "content": "BiliBili【'"${REPO}"'】Miao-Plugin 同步任务完成。\n状态：'"${STATUS}"'\n最近输出：\n'"${OUTPUT}"'"
+                }
+              }'
