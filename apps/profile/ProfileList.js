@@ -82,12 +82,21 @@ const ProfileList = {
       e.reply(`米游社API数据更新完成！`);
       
       // 暂停一下，确保消息已发送
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
       // 发送展板更新即将开始的消息
-      e.reply(`由于高速角色的速度计算可能存在误差，请将高速角色放置到展柜，并开启“显示角色详情”，正在通过展板API进行更新以获取准确数据...`);
+      e.reply(`由于高速角色的速度计算可能存在误差，请将高速角色放置到展柜，并开启"显示角色详情"，正在通过展板API进行更新以获取准确数据...`);
       
-      // 调用展板更新，进行二次更新
+      // 增加等待时间，确保米游社数据已经完成保存
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      
+      // 获取当前player实例
+      let player = Player.create(e);
+      
+      // 将_profile时间戳重置，强制刷新
+      player._profile = 0;
+      
+      // 调用展板更新，进行二次更新，强制优先使用展板数据
       const secondResult = await ProfileList.doRefresh(e, false);
       
       // 合并两次更新的角色数据
