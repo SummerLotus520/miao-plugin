@@ -64,26 +64,47 @@ const ProfileList = {
     const isSrUpdate = (e.msg && /^#?(米游社|mys)?\s*(星铁)\s*(全部面板更新|更新全部面板|获取游戏角色详情|更新面板|面板更新)/.test(e.msg)) || 
                       (e.game === 'sr');
     
+    // 先使用米游社API更新所有角色数据
+    const result = await ProfileList.doRefresh(e, true);
+    
+    // 如果是星铁更新，自动调用展板更新以获取高速角色的准确数据
     if (isSrUpdate) {
       // 获取用户UID
       let uid = await getTargetUid(e)
       if (!uid) {
-        e._replyNeedUid || e.reply(['请先发送【#星铁绑定+你的UID】来绑定查询目标', new Button(e).bindUid()])
-        return true
+        return result;
       }
       
-      // 发送提示消息
-      e.reply(`检测到您正在更新星铁角色面板数据。\n\n⚠️ 提示：米游社API对高速角色的速度属性计算存在误差，可能导致实际速度值低于游戏内显示值。\n\n建议：\n1. 将高速角色放入游戏内展柜\n2. 确保已开启"显示角色详情"\n\n即将使用展板更新以获取高速角色数据...`)
+      // 保存当前获取到的角色
+      const firstUpdateChars = e.newChar ? {...e.newChar} : {};
       
-      // 设置标记避免重复发送提示
-      e._isReplyed = true
+      // 先确认米游社API更新完成
+      e.reply(`米游社API数据更新完成！`);
       
-      // 调用展板更新
-      return await ProfileList.refresh(e)
+      // 暂停一下，确保消息已发送
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // 发送展板更新即将开始的消息
+      e.reply(`由于高速角色的速度计算可能存在误差，请将高速角色放置到展柜，并开启“显示角色详情”，正在通过展板API进行更新以获取准确数据...`);
+      
+      // 调用展板更新，进行二次更新
+      const secondResult = await ProfileList.doRefresh(e, false);
+      
+      // 合并两次更新的角色数据
+      if (e.newChar && firstUpdateChars) {
+        for (const charName in firstUpdateChars) {
+          if (!e.newChar[charName]) {
+            e.newChar[charName] = firstUpdateChars[charName];
+          }
+        }
+      }
+      
+      // 返回最终结果
+      return secondResult;
     }
     
-    // 对于非星铁角色，使用原有逻辑
-    return await ProfileList.doRefresh(e, true)
+    // 返回米游社更新的结果
+    return result;
   },
 
   /**
