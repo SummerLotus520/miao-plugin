@@ -59,6 +59,30 @@ const ProfileList = {
    * @returns {Promise<boolean|*>}
    */
   async refreshMys (e) {
+    // 检测是否为星铁角色更新
+    // 通过正则匹配判断是否为星铁更新请求，或者通过e.game属性判断
+    const isSrUpdate = (e.msg && /^#?(米游社|mys)?\s*(星铁)\s*(全部面板更新|更新全部面板|获取游戏角色详情|更新面板|面板更新)/.test(e.msg)) || 
+                      (e.game === 'sr');
+    
+    if (isSrUpdate) {
+      // 获取用户UID
+      let uid = await getTargetUid(e)
+      if (!uid) {
+        e._replyNeedUid || e.reply(['请先发送【#星铁绑定+你的UID】来绑定查询目标', new Button(e).bindUid()])
+        return true
+      }
+      
+      // 发送提示消息
+      e.reply(`检测到您正在更新星铁角色面板数据。\n\n⚠️ 提示：米游社API对高速角色的速度属性计算存在误差，可能导致实际速度值低于游戏内显示值。\n\n建议：\n1. 将高速角色放入游戏内展柜\n2. 确保已开启"显示角色详情"\n\n即将使用展板更新以获取高速角色数据...`)
+      
+      // 设置标记避免重复发送提示
+      e._isReplyed = true
+      
+      // 调用展板更新
+      return await ProfileList.refresh(e)
+    }
+    
+    // 对于非星铁角色，使用原有逻辑
     return await ProfileList.doRefresh(e, true)
   },
 
