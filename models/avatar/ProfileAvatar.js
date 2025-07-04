@@ -79,11 +79,8 @@ const ProfileAvatar = {
     let treeSet = ['101', '102', '103', '201', '202', '203', '204', '205', '206', '207', '208', '209', '210','301','302']
     let treeSuper = false
     if (!isGs && profile.trees) {
-      treeSuper = true
-      lodash.forEach(profile.trees, (tree, idx) => {
-        if (!tree.includes(treeSet[idx])) {
-          treeSuper = false
-        }
+      treeSuper = lodash.every(profile.trees, (tree, idx) => {
+        return (Array.isArray(tree) || typeof tree === 'string') && tree.includes(treeSet[idx])
       })
     }
     if (!isGs && (
@@ -93,6 +90,7 @@ const ProfileAvatar = {
     )) {
       isSuper = true
     }
+
     // 特殊处理开拓者的情况
     if (char.isTrailblazer) {
       switch (id) {
@@ -108,6 +106,7 @@ const ProfileAvatar = {
           break
       }
     }
+
     if (isSuper) {
       return CharImg.getRandomImg(
         [`profile/super-character/${name}`, `profile/normal-character/${name}`],
