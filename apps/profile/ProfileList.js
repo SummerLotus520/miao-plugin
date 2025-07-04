@@ -59,11 +59,27 @@ const ProfileList = {
    * @returns {Promise<boolean|*>}
    */ 
   async refreshMys (e) {
+    // 【解决方案】创建一个不包含循环引用的“干净”的e对象
+    // 只保留Player.create()和后续逻辑需要的核心属性
+    const cleanE = {
+      uid: await getTargetUid(e), // 确保uid已经获取到
+      user_id: e.user_id,
+      group_id: e.group_id,
+      game: e.game,
+      msg: e.msg,
+      isMaster: e.isMaster,
+      runtime: { user: e.runtime?.user } // runtime里主要是user有用
+    }
+
+    // 使用“干净”的e对象来创建Player实例
+    let player = Player.create(cleanE)
+    player._profile = 0
+
     // 判断是否为星铁更新请求
     const isSrUpdate = (e.msg && /^#?(米游社|mys)?\s*(星铁)\s*(全部面板更新|更新全部面板|获取游戏角色详情|更新面板|面板更新)/.test(e.msg)) ||  
                     (e.game === 'sr')
 
-    // 先使用米游社API更新所有角色数据
+    // 先使用米游社API更新所有角色数据，这里仍然传递原始的e对象，因为它包含了完整的上下文信息，如回复函数等
     const result = await ProfileList.doRefresh(e, true)
 
     // 若更新失败则中止，不进行展板更新
@@ -74,7 +90,8 @@ const ProfileList = {
 
     // 星铁请求，继续展板更新
     if (isSrUpdate) {
-      let uid = await getTargetUid(e)
+      // uid已在cleanE中获取，这里无需重复
+      let uid = cleanE.uid
       if (!uid) {
         return result
       }
@@ -87,9 +104,10 @@ const ProfileList = {
       e.reply(`由于高速角色的速度计算可能存在误差，请将高速角色放置到展柜，并开启"显示角色详情"，正在通过展板API进行更新以获取准确数据...`)
       await new Promise(resolve => setTimeout(resolve, 1000))
 
-      let player = Player.create(e)
+      // 复用之前创建的player实例，并为第二次更新再次重置状态
       player._profile = 0
 
+      // 第二次更新也传递原始的e对象
       const secondResult = await ProfileList.doRefresh(e, false)
 
       // 合并角色数据
