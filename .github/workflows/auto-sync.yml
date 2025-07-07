@@ -53,8 +53,7 @@ jobs:
           git clone https://gitee.com/euiko/Miao-Panel "$TMP_DIR"
 
           echo "Copying meta-gs..."
-          rm -rf ./resources/meta-gs
-          cp -r "$TMP_DIR/meta-gs" ./resources/meta-gs
+          rsync -a "$TMP_DIR/meta-gs/" ./resources/meta-gs/
 
           echo "Processing meta-sr..."
           rm -rf ./resources/meta-sr
