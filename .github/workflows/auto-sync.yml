@@ -56,9 +56,6 @@ jobs:
           rsync -a "$TMP_DIR/meta-gs/" ./resources/meta-gs/
 
           echo "Processing meta-sr..."
-          rm -rf ./resources/meta-sr
-          mkdir -p ./resources/meta-sr
-
           for zip in "$TMP_DIR"/meta-sr*/*.zip; do
             echo "Unzipping $zip..."
             unzip -o "$zip" -d ./resources/meta-sr/
