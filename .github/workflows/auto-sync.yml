@@ -44,6 +44,10 @@ jobs:
           git checkout -B master_test origin/master
           git push origin master_test --force
 
+      - name: Patch calc.js with effect templates
+        run: |
+          node .github/scripts/addEffectTemplates.cjs
+
       - name: Clone Miao-Panel and copy meta
         id: miaopanel
         run: |
@@ -69,8 +73,8 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add resources/meta-gs resources/meta-sr
-          git commit -m "Update meta-gs and meta-sr from Miao-Panel" || echo "No changes to commit"
+          git add .
+          git commit -m "Update meta-gs and meta-sr from Miao-Panel + auto patch effects" || echo "No changes to commit"
           git push origin master_test
 
       - name: Send DingTalk notification
@@ -80,12 +84,13 @@ jobs:
           REPO="${{ github.repository }}"
           MERGE_LOG=$(echo "${{ steps.merge.outputs.merge_result }}" | tail -n 10)
           PANEL_LOG="${{ steps.miaopanel.outputs.panel_result }}"
+          PATCHED=$(cat .patched-characters.txt || echo "无角色需要补充模板")
 
           curl -s -X POST "${{ secrets.DINGTALK_WEBHOOK }}" \
           -H "Content-Type: application/json" \
           -d '{
                 "msgtype": "text",
                 "text": {
-                  "content": "BiliBili【'"${REPO}"'】Miao-Plugin 同步任务完成。\nmaster分支合并上游日志：\n'"${MERGE_LOG}"'\nmaster_test分支日志：'"${PANEL_LOG}"'"
+                  "content": "BiliBili【'"${REPO}"'】Miao-Plugin 同步任务完成。\nmaster分支合并上游日志：\n'"${MERGE_LOG}"'\nmaster_test分支日志：'"${PANEL_LOG}"'\n模板新增列表：\n'"${PATCHED}"'"
                 }
               }'
