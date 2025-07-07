@@ -85,10 +85,14 @@ function checkAndPatch(filePath, isGs, charName) {
     return false;
   }
 
-  const detailsStart = code.indexOf('details: [');
-  if (detailsStart === -1) return false;
+  // 用正则匹配 details: [ ，忽略空白
+  const detailsMatch = code.match(/details\s*:\s*\[/);
+  if (!detailsMatch) {
+    console.log(`未找到 details 数组定义，跳过：${filePath}`);
+    return false;
+  }
+  const detailsStart = detailsMatch.index + detailsMatch[0].length - 1;
 
-  // 向后查找 details 数组对应的结束 ]
   let bracketCount = 0;
   let insertPos = -1;
   for (let i = detailsStart; i < code.length; i++) {
@@ -100,7 +104,10 @@ function checkAndPatch(filePath, isGs, charName) {
     }
   }
 
-  if (insertPos === -1) return false;
+  if (insertPos === -1) {
+    console.log(`未找到 details 数组结束，跳过：${filePath}`);
+    return false;
+  }
 
   const insertContent = ',\n' + (isGs ? gsTemplate : srTemplate) + '\n';
   const newCode = code.slice(0, insertPos) + insertContent + code.slice(insertPos);
