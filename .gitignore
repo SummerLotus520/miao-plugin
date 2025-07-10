@@ -22,3 +22,4 @@
 .vscode/
 .vs/
 *.code-workspace
+.patched-characters.txt
