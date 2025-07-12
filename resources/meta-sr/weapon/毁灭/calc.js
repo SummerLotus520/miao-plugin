@@ -1,5 +1,32 @@
 export default function (staticIdx, keyIdx) {
   return {
+    没有回报的加冕: [
+      staticIdx(1, 'cdmg'),
+      (tables) => {
+        return {
+          title: '攻击力提高[atkPct]%',
+          data: {
+            atkPct: tables[2] + tables[3]
+          }
+        }
+      }
+    ],
+    黎明恰如此燃烧: [
+      staticIdx(1, 'speed'),
+      (tables) => {
+        return {
+          title: '无视目标[ignore]%的防御力，装备者造成的伤害提高[dmg]%',
+          data: {
+            ignore: tables[2],
+            dmg: tables[3]
+          }
+        }
+      }
+    ],
+    一行往日的血: [
+      staticIdx(1, 'cpct'),
+      keyIdx('装备者战技和终结技造成的伤害提高[eDmg]%', { eDmg: 2, qDmg: 2 })
+    ],
     乐圮: [
       keyIdx('对生命值大于50%的伤害提高[dmg]%', 'dmg', 1)
     ],
@@ -112,18 +139,6 @@ export default function (staticIdx, keyIdx) {
             qDmg: ({ attr, calc }) => {
               return calc(attr.hp) * tables[3] / 100 > 500 ? tables[5] + tables[4] : tables[4]
             }
-          }
-        }
-      }
-    ],
-    黎明恰如此燃烧: [
-      staticIdx(1, 'speed'),
-      keyIdx('造成伤害时无视目标[ignore]%的防御力', 'ignore', 2),
-      (tables) => {
-        return {
-          title: '装备者施放终结技后，持有【烈阳】时，装备者造成的伤害提高[dmg]%',
-          data: {
-            dmg: tables[3]
           }
         }
       }

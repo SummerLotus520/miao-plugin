@@ -7,6 +7,24 @@ let attr = (key, val) => {
   }
 }
 export default {
+  妖精织梦的乐园: {
+    2: {
+      title: '造成的伤害提高36%',
+      data: {
+        Dmg: 36
+      }
+    }
+  },
+  沉欢醉饮的海隅: {
+    2: [attr('atkPct', 12), {
+      title: '装备者攻击力大于[_atk]时，持续伤害额外提高[dotDmg]%',
+      check: ({ attr }) => attr.atk >= 2400,
+      data: {
+        _atk: ({ attr }) => attr.atk < 3600 ? 2400 : 3600,
+        dotDmg: ({ attr }) => attr.atk < 3600 ? 12 : 24
+      }
+    }]
+  },
   云无留迹的过客: {
     2: attr('heal', 10)
   },
@@ -339,22 +357,19 @@ export default {
   },
   凯歌祝捷的英豪: {
     2: attr('atkPct', 12),
-    4: {
-      title: '装备者的忆灵在场时，装备者的速度提高[speedPct]%。装备者的忆灵攻击时，装备者和忆灵的暴击伤害提高[cdmg]%',
+    4: [attr('speedPct', 6), {
+      title: '装备者的忆灵攻击时，装备者和忆灵的暴击伤害提高[cdmg]%',
       data: {
-        speedPct: 6,
         cdmg: 30
       }
-    }
+    }]
   },
   哀歌覆国的诗人: {
     2: attr('quantum', 10),
     4: [attr('speedPct', -8), {
-      check: ({ attr, calc }) => calc(attr.staticAttr.speed) < 110,
-      title: '进入战斗时，若装备者的速度小于[_speed]，使装备者的暴击率提高[cpct]%',
+      title: '暴击率提高32%',
       data: {
-        _speed: ({ attr, calc }) => calc(attr.staticAttr.speed) < 95 ? 95 : 110,
-        cpct: ({ attr, calc }) => calc(attr.staticAttr.speed) < 95 ? 32 : 20
+        cpct: 32
       }
     }]
   },
@@ -370,29 +385,29 @@ export default {
   渊思寂虑的巨树: {
     2: [attr('speedPct', 6), {
       title: '速度大于等于[_speed]时，治疗量提高[heal]%',
-      check: ({ attr }) => attr.speed >= 135,
+      check: ({attr }) => attr.speed >= 135,
       data: {
         _speed: ({ attr }) => attr.speed >= 180 ? 180 : 135,
         heal: ({ attr }) => attr.speed >= 180 ? 20 : 12
       }
     }]
   },
-  烈阳惊雷的女武神: {
-    2: attr('speedPct', 6),
-    4: {
-      title: '当装备者及其忆灵为装备者及其忆灵以外的我方目标提供治疗后，速度提高[speedPct]%，我方全体暴击伤害提高[cdmg]%',
-      data: {
-        speedPct: 6,
-        cdmg: 15
-      }
-    }
-  },
   恶海逐波的船长: {
     2: attr('cdmg', 16),
     4: {
-      title: '消耗2层【助力】，使装备者攻击力提高[atkPct]%',
+      title: '攻击力提高48%',
       data: {
         atkPct: 48
+      }
+    }
+  },
+  烈阳惊雷的女武神: {
+    2: attr('speedPct', 6),
+    4: {
+      title: '速度提高6%，暴击伤害提高15%',
+      data: {
+        speedPct: 6,
+        cdmg: 15
       }
     }
   }

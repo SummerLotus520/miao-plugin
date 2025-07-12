@@ -10,6 +10,10 @@ export default function (staticIdx, keyIdx) {
         }
       }
     ],
+    氤氲麦香的梦: [
+      staticIdx(1, 'cpct'),
+      keyIdx('终结技和追加攻击造成的伤害提高[tDmg]%', { qDmg: 2, tDmg: 2 })
+    ],
     今日亦是和平的一日: (tables) => {
       return {
         title: '根据能量上限提高数据',
@@ -124,7 +128,7 @@ export default function (staticIdx, keyIdx) {
       }
     ],
     生命当付之一炬: [
-      keyIdx('装备者对其造成的伤害提高[dmg]%，装备者使其防御力降低[enemyDef]%', { dmg: 1, enemyDef: 2 })
+      keyIdx('装备者对其造成的伤害提高[dmg]%，装备者使其防御力降低[ignore]%', { dmg: 1, ignore: 2 })
     ]
   }
 }
