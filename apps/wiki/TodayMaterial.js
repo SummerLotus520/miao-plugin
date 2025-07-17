@@ -32,7 +32,7 @@ const TodayMaterial = {
     let uid = e.uid
 
     if (!data) {
-      e._isReplyed || e.reply(`查询失败，暂未获得#${uid}角色数据，请#扫码登录或 #更新面板`)
+      e._isReplyed || e.reply(`查询失败，暂未获得#${uid}角色数据，请#扫码登录 后 #更新面板`)
       return true
     }
 

@@ -32,7 +32,7 @@ export async function RoleCombatSummary (e) {
 
     resDetail = await mys.getCharacter()
     if (!resDetail || !resRole || !resDetail.avatars || resDetail.avatars.length <= 3) {
-      e.reply('角色信息获取失败')
+        e.reply('角色信息获取失败。\n请复制验证码插件链接到浏览器打开并完成验证码，若验证码未出现请使用"#米游社验证"指令。\n若完成验证码后指令未正常工作，请等待之前失败的指令执行完毕后再次发送指令。')
       return true
     }
     delete resDetail._res

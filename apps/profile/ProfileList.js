@@ -13,7 +13,7 @@ const ProfileList = {
   async doRefresh (e, fromMys = false) {
     let uid = await getTargetUid(e)
     if (!uid) {
-      e._replyNeedUid || e.reply(['请先发送【#绑定+你的UID】来绑定查询目标\n星铁请使用【#星铁绑定+UID】', new Button(e).bindUid()])
+      e._replyNeedUid || e.reply(['请使用"#扫码登录"指令绑定机器人，使用"#帮助"指令查看具体流程、问题处理及使用教程。', new Button(e).bindUid()])
       return true
     }
 
@@ -22,7 +22,7 @@ const ProfileList = {
     await player.refreshProfile(2, fromMys)    
 
     if (!player?._update?.length) {
-      e._isReplyed || e.reply(['获取角色面板数据失败，请确认角色已在游戏内橱窗展示，并开放了查看详情。设置完毕后请5分钟后再进行请求~', new Button(e).profileList(uid)])
+        e._isReplyed || e.reply(['获取角色面板数据失败。\n请复制验证码插件链接到浏览器打开并完成验证码，若验证码未出现请使用"#米游社验证"指令。\n若完成验证码后指令未正常工作，请等待之前失败的指令执行完毕后再次发送指令。', new Button(e).profileList(uid)])
       e._isReplyed = true
     } else {
       let ret = {}
@@ -33,7 +33,7 @@ const ProfileList = {
         }
       })
       if (lodash.isEmpty(ret)) {
-        e._isReplyed || e.reply(['获取角色面板数据失败，未能请求到角色数据。请确认角色已在游戏内橱窗展示，并开放了查看详情。设置完毕后请5分钟后再进行请求~', new Button(e).profileList(uid)])
+          e._isReplyed || e.reply(['获取角色面板数据失败。\n请复制验证码插件链接到浏览器打开并完成验证码，若验证码未出现请使用"#米游社验证"指令。\n若完成验证码后指令未正常工作，请等待之前失败的指令执行完毕后再次发送指令。', new Button(e).profileList(uid)])
         e._isReplyed = true
       } else {
         e.newChar = ret

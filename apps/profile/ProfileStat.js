@@ -437,7 +437,7 @@ const ProfileStat = {
     })
 
     if (avatarRet.length === 0) {
-      e._isReplyed || e.reply(`查询失败，暂未获得#${uid}角色数据，请绑定CK或 #更新面板`)
+      e._isReplyed || e.reply(`查询失败，暂未获得#${uid}角色数据，请"#扫码登录"后"#更新面板"，若已登录请查看帮助内问题处理部分(可先尝试"#刷新cookie")`)
       return true
     }
 

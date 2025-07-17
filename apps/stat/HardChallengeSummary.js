@@ -30,13 +30,13 @@ export async function HardChallengeSummary (e) {
     // 先仅适配 single，mp 真会来查这玩意儿吗……
     // 等个有缘人之后再来看吧
     if (!lvs || !lvs.single.has_data) {
-      e.reply('暂未获得本期幽境危战挑战数据...')
+        e.reply('暂未获得本期幽境危战挑战数据，若米游社已更新则：\n请复制验证码插件链接到浏览器打开并完成验证码，若验证码未出现请使用"#米游社验证"指令。\n若完成验证码后指令未正常工作，请等待之前失败的指令执行完毕后再次发送指令。')
       return true
     }
 
     resDetail = await mys.getCharacter()
     if (!resDetail || !hardChallenge || !resDetail.avatars || resDetail.avatars.length <= 3) {
-      e.reply('角色信息获取失败')
+        e.reply('角色信息获取失败。\n请复制验证码插件链接到浏览器打开并完成验证码，若验证码未出现请使用"#米游社验证"指令。\n若完成验证码后指令未正常工作，请等待之前失败的指令执行完毕后再次发送指令。')
       return true
     }
     delete resDetail._res

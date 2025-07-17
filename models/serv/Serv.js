@@ -98,7 +98,7 @@ const Serv = {
       return player._update?.length || 0
     } catch (err) {
       if (!e._isReplyed) {
-        e.reply(`UID:${uid}更新面板失败，更新服务：${serv.name}`)
+          e.reply(`UID:${uid}更新面板失败，更新服务：${serv.name}。\n若出现验证码,请复制验证码插件链接到浏览器打开并完成验证码，若验证码未出现请使用"#米游社验证"指令。\n若完成验证码后指令未正常工作，请等待之前失败的指令执行完毕后再次发送指令。`)
       }
       console.log(err)
       return false

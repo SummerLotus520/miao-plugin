@@ -36,7 +36,7 @@ export async function AbyssSummary (e) {
     }
     resDetail = await mys.getCharacter()
     if (!resDetail || !resAbyss || !resDetail.avatars || resDetail.avatars.length <= 3) {
-      e.reply('角色信息获取失败')
+        e.reply('角色信息获取失败。\n请复制验证码插件链接到浏览器打开并完成验证码，若验证码未出现请使用"#米游社验证"指令。\n若完成验证码后指令未正常工作，请等待之前失败的指令执行完毕后再次发送指令。')
       return true
     }
     delete resDetail._res
@@ -127,11 +127,11 @@ export async function AbyssSummary (e) {
         uid
       }, { e, scale: 1.2 })
     } else {
-      e.reply('暂未获得本期深渊挑战数据...')
+        e.reply('暂未获得本期深渊挑战数据，若米游社已经更新：\n请复制验证码插件链接到浏览器打开并完成验证码，若验证码未出现请使用"#米游社验证"指令。\n若完成验证码后指令未正常工作，请等待之前失败的指令执行完毕后再次发送指令。')
       return true
     }
   } else {
-    e.reply(`${ret.message || '上传失败'}，请稍后重试...`)
+      e.reply(`${ret.message || '上传失败'}。\n请复制验证码插件链接到浏览器打开并完成验证码，若验证码未出现请使用"#米游社验证"指令。\n若完成验证码后指令未正常工作，请等待之前失败的指令执行完毕后再次发送指令。`)
   }
   return true
 }
