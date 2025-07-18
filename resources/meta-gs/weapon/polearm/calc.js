@@ -1,5 +1,11 @@
 export default function (step, staticStep) {
   return {
+    支离轮光: {
+      title: '攻击力提高[atkPct]%',
+      refine: {
+        atkPct: [24,30,36,42,48]
+      }
+    },
     白缨枪: {
       title: '白缨枪普通攻击伤害提高[aDmg]%',
       refine: { aDmg: step(24) }

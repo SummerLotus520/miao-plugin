@@ -1,5 +1,11 @@
 export default function (step, staticStep) {
   return {
+    拾慧铸熔: {
+      title: '元素精通提升[mastery]%',
+      refine: {
+        mastery: [60,75,90,105,120]
+      }
+    },
     沐浴龙血的剑: {
       check: ({ element }) => ['火', '雷'].includes(element),
       title: '对处于火元素或雷元素影响下的敌人，造成的伤害提高[dmg]%',

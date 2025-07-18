@@ -4,6 +4,9 @@ export default function (staticIdx, keyIdx) {
       staticIdx(1, 'recharge'),
       keyIdx('释放终结技时的治疗量提高[qHeal]%', 'qHeal', 2)
     ],
+    直到明天的明天: [
+      keyIdx('治疗量提高[heal]%，造成的伤害提高[dmg]%', { heal: 1, dmg: 2 })
+    ],
     同一种心情: [
       staticIdx(1, 'heal')
     ],
@@ -57,10 +60,10 @@ export default function (staticIdx, keyIdx) {
       staticIdx(1, 'stance'),
       (tables) => {
         return {
-          title: '终结技攻击敌方目标后，敌方目标受到的伤害提高[enemydmg]%',
+          title: '终结技攻击敌方目标后，敌方目标受到的伤害提高[enemyDmg]%',
           sort: 9,
           data: {
-            enemydmg: ({ attr, calc }) => calc(attr.stance) >= 150 ? (tables[2] + tables[3]) : tables[2]
+            enemyDmg: ({ attr, calc }) => calc(attr.stance) >= 150 ? (tables[2] + tables[3]) : tables[2]
           }
         }
       }
