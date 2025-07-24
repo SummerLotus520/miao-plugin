@@ -55,11 +55,25 @@ let DmgAttr = {
       ret.kx = 0
       ret.staticAttr = attr.staticAttr
       if (game === 'gs') {
-        Object.assign(ret, {
-          vaporize: 0, melt: 0, burning: 0, crystallize: 0, superConduct: 0, swirl: 0, electroCharged: 0,
-          shatter: 0, overloaded: 0, bloom: 0, burgeon: 0, hyperBloom: 0, aggravate: 0, spread: 0,
-          fykx: 0, fyplus: 0
-        })
+        ret.vaporize = 0 // 蒸发
+        ret.melt = 0 // 融化
+        ret.burning = 0 // 燃烧
+        ret.crystallize = 0 // 结晶
+        ret.superConduct = 0 // 超导
+        ret.swirl = 0 // 扩散
+        ret.electroCharged = 0 // 感电
+        ret.shatter = 0 // 碎冰
+        ret.overloaded = 0 // 超载
+        ret.bloom = 0 // 绽放
+        ret.burgeon = 0 // 烈绽放
+        ret.hyperBloom = 0 // 超绽放
+        ret.aggravate = 0 // 超激化
+        ret.spread = 0 // 蔓激化
+        ret.lunarCharged = 0 // 月感电
+        ret.fykx = 0 // 敌人反应抗性降低
+        ret.fyplus = 0 // 反应伤害值提升
+        ret.fypct = 0 // 反应基础伤害加成
+        ret.fybase = 0 // 反应基础伤害值提升
       } else if (game === 'sr') {
         ret.sp = char.sp * 1
         ret.superBreak = { ignore: 0 }
@@ -161,7 +175,7 @@ let DmgAttr = {
         if (key === 'enemyDef') { attr.enemy.def += val * 1 || 0; return }
         if (key === 'ignore' || key === 'enemyIgnore') { attr.enemy.ignore += val * 1 || 0; return }
 
-        if (['vaporize', 'melt', 'crystallize', 'burning', 'superConduct', 'swirl', 'electroCharged', 'shatter', 'overloaded', 'bloom', 'burgeon', 'hyperBloom', 'aggravate', 'spread', 'kx', 'fykx', 'multi', 'fyplus'].includes(key)) {
+        if (['vaporize', 'melt', 'crystallize', 'burning', 'superConduct', 'swirl', 'electroCharged', 'shatter', 'overloaded', 'bloom', 'burgeon', 'hyperBloom', 'aggravate', 'spread', 'lunarCharged', 'kx', 'fykx', 'multi', 'fyplus', 'fypct', 'fybase'].includes(key)) {
           attr[key] += val * 1 || 0
           return
         }
