@@ -1,5 +1,28 @@
 export default function (step, staticStep) {
   return {
+    天光的纺琴: {
+      title: '元素精通提升[mastery]%',
+      refine: {
+        mastery: [120, 150, 180, 210, 240]
+      }
+    },
+    乌髓孑灯: {
+      title: '绽放反应造成的伤害提升[bloom]%,月绽放反应造成的伤害提升[lunarBloom]%',
+      data: {
+        bloom: [48, 60, 72, 84, 96],
+        lunarBloom: ({ params, refine }) => step(12)[refine] * (params.Moonsign || 0) >= 2 ? 2 : 1
+      }
+    },
+    纺夜天镜: {
+      title: '元素精通提升[mastery],绽放反应伤害提升[bloom]%,超绽放、烈绽放伤害提升[burgeon]%,月绽放伤害提升[lunarBloom]%',
+      data: {
+        mastery: ({ params, refine, element }) => ((params.Moonsign || 0) >= 1 ? step(60)[refine] : 0) + (['水', '草'].includes(element) ? step(60)[refine] : 0),
+        bloom: ({ params, refine, element }) => (((params.Moonsign || 0) >= 1 ? 1 : 0) + (['水', '草'].includes(element) ? 1 : 0)) === 2 ? step(120)[refine] : 0,
+        burgeon: ({ params, refine, element }) => (((params.Moonsign || 0) >= 1 ? 1 : 0) + (['水', '草'].includes(element) ? 1 : 0)) === 2 ? step(80)[refine] : 0,
+        hyperBloom: ({ params, refine, element }) => (((params.Moonsign || 0) >= 1 ? 1 : 0) + (['水', '草'].includes(element) ? 1 : 0)) === 2 ? step(80)[refine] : 0,
+        lunarBloom: ({ params, refine, element }) => (((params.Moonsign || 0) >= 1 ? 1 : 0) + (['水', '草'].includes(element) ? 1 : 0)) === 2 ? step(40)[refine] : 0
+      }
+    },
     翡玉法球: {
       check: ({ element }) => element === '水',
       title: '触发蒸发、感电、冰冻或水元素扩散反应后的12秒内，攻击力提高[atkPct]%',
@@ -226,29 +249,6 @@ export default function (step, staticStep) {
       refine: {
         a3Cdmg: step(28 + 40)
       }
-    }],
-    天光的纺琴: {
-      title: '施放元素战技后元素精通提升[mastery]',
-      refine: {
-        mastery: step(120)
-      }
-    },
-    乌髓孑灯: {
-      title: '绽放反应造成的伤害提升[bloom]%，月绽放反应造成的伤害提升[lunarBloom]%',
-      data: {
-        bloom: ({ refine }) => step(48)[refine],
-        lunarBloom: ({ params, refine }) => step(12)[refine] * (params.Moonsign || 0) >= 2 ? 2 : 1
-      }
-    },
-    纺夜天镜: {
-      title: '元素精通提升[mastery],绽放反应伤害提升[bloom]%,超绽放、烈绽放伤害提升[burgeon]%,月绽放伤害提升[lunarBloom]%',
-      data: {
-        mastery: ({ params, refine, element }) => ((params.Moonsign || 0) >= 1 ? step(60)[refine] : 0) + (['水', '草'].includes(element) ? step(60)[refine] : 0),
-        bloom: ({ params, refine, element }) => (((params.Moonsign || 0) >= 1 ? 1 : 0) + (['水', '草'].includes(element) ? 1 : 0)) === 2 ? step(120)[refine] : 0,
-        burgeon: ({ params, refine, element }) => (((params.Moonsign || 0) >= 1 ? 1 : 0) + (['水', '草'].includes(element) ? 1 : 0)) === 2 ? step(80)[refine] : 0,
-        hyperBloom: ({ params, refine, element }) => (((params.Moonsign || 0) >= 1 ? 1 : 0) + (['水', '草'].includes(element) ? 1 : 0)) === 2 ? step(80)[refine] : 0,
-        lunarBloom: ({ params, refine, element }) => (((params.Moonsign || 0) >= 1 ? 1 : 0) + (['水', '草'].includes(element) ? 1 : 0)) === 2 ? step(40)[refine] : 0
-      }
-    }
+    }]
   }
 }

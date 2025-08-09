@@ -3,6 +3,9 @@ export default function (staticIdx, keyIdx) {
     余生的第一天: [
       staticIdx(1, 'defPct')
     ],
+    愿旅途永远坦然: [
+      keyIdx('护盾量提高[shield]%，造成的伤害提高[dmg]%', { shield: 1, dmg: 2 })
+    ],
     制胜的瞬间: [
       staticIdx(1, 'defPct'),
       staticIdx(2, 'effPct'),

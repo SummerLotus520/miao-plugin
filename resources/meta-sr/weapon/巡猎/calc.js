@@ -1,5 +1,20 @@
 export default function (staticIdx, keyIdx) {
   return {
+    于那终点再见: [
+      staticIdx(1, 'cdmg'),
+      keyIdx('装备者战技和追加攻击造成的伤害提高[eDmg]%', { eDmg: 2, tDmg: 2 })
+    ],
+    理想燃烧的地狱: [
+      staticIdx(1, 'cpct'),
+      (tables) => {
+        return {
+          title: '攻击力提高[atkPct]%',
+          data: {
+            atkPct: tables[2] + tables[3] * 4
+          }
+        }
+      }
+    ],
     于夜色中: [
       staticIdx(1, 'cpct'),
       (tables) => {
@@ -122,17 +137,6 @@ export default function (staticIdx, keyIdx) {
           title: '2层Buff使装备者造成的终结技伤害无视目标[qIgnore]%防御力',
           data: {
             qIgnore: tables[2] * 2
-          }
-        }
-      }
-    ],
-    理想燃烧的地狱: [
-      staticIdx(1, 'cpct'),
-      (tables) => {
-        return {
-          title: '攻击力提高[atkPct]%',
-          data: {
-            atkPct: tables[2] + tables[3] * 4
           }
         }
       }
