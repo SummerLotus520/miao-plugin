@@ -31,15 +31,19 @@ const Render = {
             scale: Cfg.scale(cfg.scale || 1)
           },
             copyright: `
-<span style="font-weight: bold; color: gold;">Yunzai-Fork</span> & 
-<span style="font-weight: bold; color: gold;">Miao-Plugin-Fork</span> By 
-<span style="font-weight: bold; color: #90ee90;">Lotus</span><br> 
-<span style="font-weight: bold; font-size: larger;"> 
-  <span style="color: #00BFFF;">机器人主人：</span> 
-  <span style="color: #90ee90;">荷花</span> 
-  <span style="color: #00BFFF;"> 荷花的小群：</span> 
-  <span style="color: #ff3030; font-weight: bold; font-size: x-large;">702211431</span> 
-</span>`
+<span style="font-weight: bold; color: gold;">Yunzai-Fork</span> &
+<span style="font-weight: bold; color: gold;">Miao-Plugin-Fork</span> By
+<span style="font-weight: bold; color: #90ee90;">Lotus</span><br>
+<span style="font-weight: bold; font-size: larger;">
+  <span style="color: #00BFFF;">机器人主人：</span>
+  <span style="color: #90ee90;">荷花</span>
+  <span style="color: #00BFFF;"> 荷花的小群：</span>
+  <span style="color: #ff3030; font-weight: bold; font-size: x-large;">702211431</span>
+</span><br>
+服务器到期/机器人停运日期：<span style="color: #ff3030; font-weight: bold; font-size: x-large;">2026/01</span><br>
+感谢您的<span style="color: #ff3030; font-weight: bold; font-size: x-large;">捐赠</span><br>
+你的捐赠是对机器人运行最大的支持续命！<br>
+<br>`
 
 
         }
