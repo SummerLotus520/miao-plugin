@@ -41,8 +41,7 @@ const Render = {
   <span style="color: #ff3030; font-weight: bold; font-size: x-large;">702211431</span>
 </span><br>
 服务器到期/机器人停运日期：<span style="color: #ff3030; font-weight: bold; font-size: x-large;">2026/01</span><br>
-感谢您的<span style="color: #ff3030; font-weight: bold; font-size: x-large;">捐赠</span><br>
-你的捐赠是对机器人运行最大的支持续命！<br>
+感谢您的<span style="color: #ff3030; font-weight: bold; font-size: x-large;">捐赠</span> 你的捐赠是对机器人运行最大的支持续命！<br>
 <br>`
 
 
