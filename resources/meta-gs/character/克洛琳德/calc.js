@@ -28,7 +28,39 @@ export const details = [{
       avg: q1.avg * 5
     }
   }
-}]
+},
+{
+  title: '触发特效后生命值',
+  dmg: ({ attr, calc }) => ({ avg: Math.min(calc(attr.hp) * 1) })
+}, {
+  title: '触发特效后攻击力',
+  dmg: ({ attr, calc }) => ({ avg: Math.min(calc(attr.atk) * 1) })
+}, {
+  title: '触发特效后防御力',
+  dmg: ({ attr, calc }) => ({ avg: Math.min(calc(attr.def) * 1) })
+}, {
+  title: '触发特效后暴击率',
+  dmg: ({ attr, calc }) => ({ avg: Math.min(calc(attr.cpct) * 1) })
+}, {
+  title: '触发特效后暴击伤害',
+  dmg: ({ attr, calc }) => ({ avg: Math.min(calc(attr.cdmg) * 1) })
+}, {
+  title: '触发特效后元素精通',
+  dmg: ({ attr, calc }) => ({ avg: Math.min(calc(attr.mastery) * 1) })
+}, {
+  title: '触发特效后充能效率',
+  dmg: ({ attr, calc }) => ({ avg: Math.min(calc(attr.recharge) * 1) })
+}, {
+  title: '触发特效后治疗加成',
+  dmg: ({ attr, calc }) => ({ avg: Math.min(calc(attr.heal) * 1) })
+}, {
+  title: '触发特效后护盾强效',
+  dmg: ({ attr, calc }) => ({ avg: Math.min(calc(attr.shield) * 1) })
+}, {
+  title: '当前圣遗物套装',
+  dmg: ({ artis }) => ({ avg: artis, type: 'text' })
+}
+]
 
 export const defParams = ({ weapon }) => weapon.name === '海渊终曲' ? { BondOfLife: 35 * 3 + 25, blPct: 1 } : { BondOfLife: 35 * 3, blPct: 1 }// 生命之契在此调整,请勿超过200,默认生命之契未计入队友治疗转化
 export const defDmgIdx = 4

@@ -7,6 +7,25 @@ let attr = (key, val) => {
   }
 }
 export default {
+  再创天地的救世主: {
+    2: attr('cpct', 8),
+    4: {
+      title: '使装备者及其忆灵生命上限提高24%，我方全体造成的伤害提高8%',
+      data: {
+        hpPct: 24,
+        dmg: 8
+      }
+    }
+  },
+  自匿星芒的隐士: {
+    2: attr('cdmg', 16),
+    4: {
+      title: '使装备者的暴击伤害提高16%',
+      data: {
+        cdmg: 16
+      }
+    }
+  },
   云无留迹的过客: {
     2: attr('heal', 10)
   },

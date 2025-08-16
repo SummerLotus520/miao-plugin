@@ -1,4 +1,55 @@
 {
+  "10000121": {
+    "id": 10000121,
+    "name": "爱诺v3",
+    "abbr": "爱诺v3",
+    "star": 4,
+    "elem": "hydro",
+    "weapon": "claymore",
+    "talentId": {
+      "12101": "a",
+      "12102": "e",
+      "12103": "q"
+    },
+    "talentCons": {
+      "e": 5,
+      "q": 3
+    }
+  },
+  "10000120": {
+    "id": 10000120,
+    "name": "菲林斯v3",
+    "abbr": "菲林斯v3",
+    "star": 5,
+    "elem": "electro",
+    "weapon": "polearm",
+    "talentId": {
+      "12001": "a",
+      "12002": "e",
+      "12003": "q"
+    },
+    "talentCons": {
+      "e": 5,
+      "q": 3
+    }
+  },
+  "10000119": {
+    "id": 10000119,
+    "name": "菈乌玛v3",
+    "abbr": "菈乌玛v3",
+    "star": 5,
+    "elem": "dendro",
+    "weapon": "catalyst",
+    "talentId": {
+      "11901": "a",
+      "11902": "e",
+      "11903": "q"
+    },
+    "talentCons": {
+      "e": 5,
+      "q": 3
+    }
+  },
   "10000002": {
     "id": 10000002,
     "name": "神里绫华",
@@ -1875,6 +1926,113 @@
     "talentCons": {
       "e": 5,
       "q": 3
+    }
+  },
+  "20000001": {
+    "id": 20000001,
+    "name": "原主",
+    "abbr": "原主",
+    "star": 5,
+    "elem": "multi",
+    "weapon": "sword",
+    "talentId": {
+      "100553": "a"
+    },
+    "talentCons": {
+      "a": 0,
+      "e": 0,
+      "q": 0
+    }
+  },
+  "20000002": {
+    "id": 20000002,
+    "name": "风主",
+    "abbr": "风主",
+    "star": 5,
+    "elem": "anemo",
+    "weapon": "sword",
+    "talentId": {},
+    "talentCons": {
+      "e": 5,
+      "q": 3
+    }
+  },
+  "20000003": {
+    "id": 20000003,
+    "name": "岩主",
+    "abbr": "岩主",
+    "star": 5,
+    "elem": "geo",
+    "weapon": "sword",
+    "talentId": {},
+    "talentCons": {
+      "e": 5,
+      "q": 3
+    }
+  },
+  "20000004": {
+    "id": 20000004,
+    "name": "雷主",
+    "abbr": "雷主",
+    "star": 5,
+    "elem": "electro",
+    "weapon": "sword",
+    "talentId": {},
+    "talentCons": {
+      "e": 5,
+      "q": 3
+    }
+  },
+  "20000005": {
+    "id": 20000005,
+    "name": "草主",
+    "abbr": "草主",
+    "star": 5,
+    "elem": "dendro",
+    "weapon": "sword",
+    "talentId": {},
+    "talentCons": {
+      "e": 3,
+      "q": 5
+    }
+  },
+  "20000006": {
+    "id": 20000006,
+    "name": "水主",
+    "abbr": "水主",
+    "star": 5,
+    "elem": "hydro",
+    "weapon": "sword",
+    "talentId": {},
+    "talentCons": {
+      "e": 3,
+      "q": 5
+    }
+  },
+  "20000007": {
+    "id": 20000007,
+    "name": "火主",
+    "abbr": "火主",
+    "star": 5,
+    "elem": "pyro",
+    "weapon": "sword",
+    "talentId": {},
+    "talentCons": {
+      "e": 3,
+      "q": 5
+    }
+  },
+  "20000099": {
+    "id": 20000099,
+    "name": "派蒙",
+    "abbr": "派蒙",
+    "star": 5,
+    "elem": "pyro",
+    "weapon": "sword",
+    "talentId": {},
+    "talentCons": {
+      "e": 3,
+      "q": 5
     }
   }
 }
