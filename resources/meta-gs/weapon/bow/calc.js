@@ -1,5 +1,11 @@
 export default function (step, staticStep) {
   return {
+    罗网勾针: {
+      title: '元素精通提升[mastery]%',
+      refine: {
+        mastery: ({ params, refine }) => step(60)[refine] * (params.Moonsign || 0) >= 2 ? 2 : 1
+      }
+    },
     猎弓: false,
 
     历练的猎弓: false,
@@ -298,12 +304,6 @@ export default function (step, staticStep) {
       title: '重击造成的伤害提升[a2Dmg]%',
       refine: {
         a2Dmg: step(6 * 6)
-      }
-    },
-    罗网勾针: {
-      title: '触发元素反应后元素精通提升[mastery]',
-      data: {
-        mastery: ({ params, refine }) => step(60)[refine] * (params.Moonsign || 0) >= 2 ? 2 : 1
       }
     }
   }

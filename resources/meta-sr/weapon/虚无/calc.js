@@ -1,7 +1,10 @@
 export default function (staticIdx, keyIdx) {
   return {
     以世界之名: [
-      keyIdx('对陷入负面效果的敌人伤害提高[dmg]%，释放战技的功力提高[atkPct]%', { dmg: 1, atkPct: 3 })
+      keyIdx('对陷入负面效果的敌人伤害提高[dmg]%，释放战技的攻击力提高[atkPct]%', { dmg: 1, atkPct: 3 })
+    ],
+    假日浴场大冒险: [
+      keyIdx('使装备者造成的伤害提高[dmg]%，敌方受到的伤害提高[enemydmg]%', { dmg: 1, enemydmg: 2})
     ],
     决心如汗珠般闪耀: [
       keyIdx('攻陷状态敌方防御力降低[enemyDef]%', 'enemyDef', 2)
@@ -116,15 +119,14 @@ export default function (staticIdx, keyIdx) {
       staticIdx(1, 'stance'),
       keyIdx('【焚灼】状态下，敌方目标受到的击破伤害提高[breakEnemydmg]%', 'breakEnemydmg', 2)
     ],
-    谎言在风中飘扬: [
-      staticIdx(1, 'speedPct'),
-      keyIdx('装备者施放攻击后，有120%的基础概率使敌方每个单体目标的防御力降低[enemyDef]%', 'enemyDef', 2),
+    海洋为何而歌: [
+      staticIdx(1, 'effPct'),
       (tables) => {
         return {
-          title: '若装备者的速度大于等于170，有120%的基础概率使敌方每个单体目标的防御力降低[enemyDef]%',
-          check: ({ attr, calc }) => calc(attr.speed) >= 170,
+          title: '【魂迷】状态下，敌方目标受到的持续伤害提高[dotenemydmg]%，攻击者速度提高[speedPct]%',
           data: {
-            enemyDef: tables[3]
+            dotenemydmg: tables[2] * 6,
+            speedPct: tables[3]
           }
         }
       }

@@ -1,5 +1,17 @@
 export default function (staticIdx, keyIdx) {
   return {
+    纵然山河万程: [
+      staticIdx(1, 'atkPct'),
+      staticIdx(2, 'shield'),
+      (tables) => {
+        return {
+          title: '【卫戍】的目标造成的伤害提高[dmg]%',
+          data: {
+            dmg: tables[4] + tables[5]
+          }
+        }
+      }
+    ],
     余生的第一天: [
       staticIdx(1, 'defPct')
     ],
