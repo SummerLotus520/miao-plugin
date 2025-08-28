@@ -19,7 +19,7 @@ const ProfileList = {
 
     // 数据更新
     let player = Player.create(e)
-    await player.refreshProfile(2, fromMys)    
+    await player.refreshProfile(2, fromMys)
 
     if (!player?._update?.length) {
         e._isReplyed || e.reply(['获取角色面板数据失败。\n请复制验证码插件链接到浏览器打开并完成验证码，若验证码未出现请使用"#米游社验证"指令。\n若完成验证码后指令未正常工作，请等待之前失败的指令执行完毕后再次发送指令。', new Button(e).profileList(uid)])
@@ -57,72 +57,10 @@ const ProfileList = {
    * 米游社刷新面板
    * @param e
    * @returns {Promise<boolean|*>}
-   */ 
+   */
   async refreshMys (e) {
-    // 【解决方案】创建一个不包含循环引用的“干净”的e对象
-    // 只保留Player.create()和后续逻辑需要的核心属性
-    const cleanE = {
-      uid: await getTargetUid(e), // 确保uid已经获取到
-      user_id: e.user_id,
-      group_id: e.group_id,
-      game: e.game,
-      msg: e.msg,
-      isMaster: e.isMaster,
-      runtime: { user: e.runtime?.user } // runtime里主要是user有用
-    }
-
-    // 使用“干净”的e对象来创建Player实例
-    let player = Player.create(cleanE)
-    player._profile = 0
-
-    // 判断是否为星铁更新请求
-    const isSrUpdate = (e.msg && /^#?(米游社|mys)?\s*(星铁)\s*(全部面板更新|更新全部面板|获取游戏角色详情|更新面板|面板更新)/.test(e.msg)) ||  
-                    (e.game === 'sr')
-
-    // 先使用米游社API更新所有角色数据，这里仍然传递原始的e对象，因为它包含了完整的上下文信息，如回复函数等
-    const result = await ProfileList.doRefresh(e, true)
-
-    // 若更新失败则中止，不进行展板更新
-    if (result === true && !e.newChar) {
-      e.reply('米游社数据更新失败，已终止更新流程。')
-      return result
-    }
-
-    // 星铁请求，继续展板更新
-    if (isSrUpdate) {
-      // uid已在cleanE中获取，这里无需重复
-      let uid = cleanE.uid
-      if (!uid) {
-        return result
-      }
-
-      const firstUpdateChars = e.newChar ? { ...e.newChar } : {}
-
-      e.reply(`米游社API数据更新完成！`)
-      await new Promise(resolve => setTimeout(resolve, 1000))
-
-      e.reply(`由于高速角色的速度计算可能存在误差，请将高速角色放置到展柜，并开启"显示角色详情"，正在通过展板API进行更新以获取准确数据...`)
-      await new Promise(resolve => setTimeout(resolve, 1000))
-
-      // 复用之前创建的player实例，并为第二次更新再次重置状态
-      player._profile = 0
-
-      // 第二次更新也传递原始的e对象
-      const secondResult = await ProfileList.doRefresh(e, false)
-
-      // 合并角色数据
-      if (e.newChar && firstUpdateChars) {
-        for (const charName in firstUpdateChars) {
-          if (!e.newChar[charName]) {
-            e.newChar[charName] = firstUpdateChars[charName]
-          }
-        }
-      }
-
-      return secondResult
-    }
-
-    return result
+    // 已移除使用展板进行二次速度校正的逻辑，现在只通过米游社API更新一次。
+    return await ProfileList.doRefresh(e, true)
   },
 
   /**
