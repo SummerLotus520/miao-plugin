@@ -9,6 +9,9 @@ export default function (staticIdx, keyIdx) {
       staticIdx(1, 'stance')
     ],
     调和: [
+      keyIdx('击破伤害提高[breakEnemydmg]%', 'breakEnemydmg', 1)
+    ],
+    调和: [
       keyIdx('进入战斗提高速度[speed]', 'speed', 1)
     ],
     轮契: [],
@@ -62,6 +65,21 @@ export default function (staticIdx, keyIdx) {
     如果时间是一朵花: [
       staticIdx(1, 'cdmg'),
       keyIdx('当装备者持有【谕示】时，我方全体目标的暴击伤害提高[cdmg]%', 'cdmg', 2)
+    ],
+    金血铭刻的时代: [
+      staticIdx(1, 'atkPct'),
+      keyIdx('战技造成的伤害提高[edmg]%', 'edmg', 2)
+    ],
+    永远的迷境饭: [
+      staticIdx(1, 'atkPct'),
+      (tables) => {
+        return {
+          title: '装备者施放战技后，攻击力提高[atkPct]%',
+          data: {
+            atkPct: tables[2] * 3
+          }
+        }
+      }
     ]
   }
 }

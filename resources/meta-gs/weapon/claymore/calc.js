@@ -1,5 +1,18 @@
 export default function (step, staticStep) {
   return {
+    万能钥匙: {
+      title: '元素精通提升[mastery]%',
+      data: {
+        mastery: ({ params, refine }) => step(60)[refine] * (params.Moonsign || 0) >= 2 ? 2 : 1
+      }
+    },
+    拾慧铸熔: {
+      check: ({ element }) => ['风', '水', '雷', '草'].includes(element),
+      title: '触发感电、月感电或绽放反应时，元素精通提升[mastery]',
+      refine: {
+        mastery: step(60)
+      }
+    },
     沐浴龙血的剑: {
       check: ({ element }) => ['火', '雷'].includes(element),
       title: '对处于火元素或雷元素影响下的敌人，造成的伤害提高[dmg]%',
@@ -99,7 +112,12 @@ export default function (step, staticStep) {
         phy: step(8)
       }
     },
-    狼的末路: [staticStep('atkPct', 20)],
+    狼的末路: [staticStep('atkPct', 20), {
+      title: '攻击命中生命值低于30%的敌人时，攻击力提升[atkPct]%',
+      refine: {
+        atkPct: step(40)
+      }
+    }],
     无工之剑: [staticStep('shield', 20), {
       title: '满Buff护盾下攻击力提高[atkPct]%',
       buffCount: 10,
@@ -215,19 +233,6 @@ export default function (step, staticStep) {
       data: {
         cdmg: ({ params, refine }) => params.Nightsoul === true ? (step(20)[refine] * 1.75) : step(20)[refine],
         atkPct: ({ params, refine }) => params.Nightsoul === true ? (step(28)[refine] * 1.75) : step(28)[refine]
-      }
-    },
-    拾慧铸熔: {
-      check: ({ element }) => ['风', '水', '雷', '草'].includes(element),
-      title: '触发感电、月感电或绽放反应时，元素精通提升[mastery]',
-      refine: {
-        mastery: step(60)
-      }
-    },
-    万能钥匙: {
-      title: '触发元素反应后元素精通提升[mastery]',
-      data: {
-        mastery: ({ params, refine }) => step(60)[refine] * (params.Moonsign || 0) >= 2 ? 2 : 1
       }
     }
   }

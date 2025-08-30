@@ -7,6 +7,26 @@ let attr = (key, val) => {
   }
 }
 export default {
+  再创天地的救世主: {
+    2: attr('cpct', 8),
+    4: {
+      title: '使装备者及其忆灵生命上限提高24%，我方全体造成的伤害提高15%',
+      data: {
+        hpPct: 24,
+        dmg: 15
+      }
+    }
+  },
+  自匿星芒的隐士: {
+    2: attr('shield', 10),
+    4: {
+      title: '使装备者提供的护盾量提高12%，我方目标持有装备者提供的护盾时，暴击伤害提高15%。',
+      data: {
+        cdmg: 15,
+        shield: 12
+      }
+    }
+  },
   云无留迹的过客: {
     2: attr('heal', 10)
   },
@@ -350,11 +370,9 @@ export default {
   哀歌覆国的诗人: {
     2: attr('quantum', 10),
     4: [attr('speedPct', -8), {
-      check: ({ attr, calc }) => calc(attr.staticAttr.speed) < 110,
-      title: '进入战斗时，若装备者的速度小于[_speed]，使装备者的暴击率提高[cpct]%',
+      title: '装备者的暴击率提高[cpct]%',
       data: {
-        _speed: ({ attr, calc }) => calc(attr.staticAttr.speed) < 95 ? 95 : 110,
-        cpct: ({ attr, calc }) => calc(attr.staticAttr.speed) < 95 ? 32 : 20
+        cpct: 32
       }
     }]
   },
