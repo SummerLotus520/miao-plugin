@@ -80,8 +80,10 @@ let MysPanelHSRData = {
     return ret
   },
 
-  getTrees(data) {
-    return lodash.sortBy(data.filter(skill => skill.point_type !== 2 && skill.is_activated), "point_id").map(skill => skill.point_id)
+  getTrees (data) {
+    return lodash.map(lodash.filter(data,
+      skill => skill.point_type !== 2 && skill.is_activated
+    ), 'point_id')
   },
 
   getArtifact(data) {
