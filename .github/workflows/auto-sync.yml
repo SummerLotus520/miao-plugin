@@ -1,18 +1,18 @@
 name: Auto Sync Miao-Plugin Updates
 
-on:
-  schedule:
+on: 
+  schedule: 
     - cron: '0 16 * * *'  # 北京时间 00:00
     - cron: '0 22 * * *'  # 北京时间 06:00
     - cron: '0 4  * * *'  # 北京时间 12:00
     - cron: '0 10 * * *'  # 北京时间 18:00
   workflow_dispatch:
 
-jobs:
-  sync:
+jobs: 
+  sync: 
     runs-on: ubuntu-latest
 
-    steps:
+    steps: 
       - name: Checkout master branch
         uses: actions/checkout@v4
         with:
@@ -39,43 +39,9 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
           git push origin master || true
 
-      - name: Reset master_test branch to master
-        run: |
-          git checkout -B master_test origin/master
-          git push origin master_test --force
-
       - name: Patch calc.js with effect templates
         run: |
           node .github/scripts/addEffectTemplates.cjs
-
-      - name: Clone Miao-Panel and copy meta
-        id: miaopanel
-        run: |
-          set -e
-          TMP_DIR=$(mktemp -d)
-          echo "Cloning Miao-Panel into $TMP_DIR..."
-          git clone https://gitee.com/euiko/Miao-Panel "$TMP_DIR"
-
-          echo "Copying meta-gs..."
-          rsync -a "$TMP_DIR/meta-gs/" ./resources/meta-gs/
-
-          echo "Processing meta-sr..."
-          for zip in "$TMP_DIR"/meta-sr*/*.zip; do
-            echo "Unzipping $zip..."
-            unzip -o "$zip" -d ./resources/meta-sr/
-          done
-
-          echo "Miao-Panel copied and meta-sr updated"
-
-          echo "panel_result=成功添加Miao-Panel" >> $GITHUB_OUTPUT
-
-      - name: Commit and push to master_test
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git add .
-          git commit -m "Update meta-gs and meta-sr from Miao-Panel + auto patch effects" || echo "No changes to commit"
-          git push origin master_test
 
       - name: Send DingTalk notification
         if: always()
@@ -83,14 +49,12 @@ jobs:
           STATUS="${{ job.status }}"
           REPO="${{ github.repository }}"
           MERGE_LOG=$(echo "${{ steps.merge.outputs.merge_result }}" | tail -n 10)
-          PANEL_LOG="${{ steps.miaopanel.outputs.panel_result }}"
-          PATCHED=$(cat .patched-characters.txt || echo "无角色需要补充模板")
 
           curl -s -X POST "${{ secrets.DINGTALK_WEBHOOK }}" \
           -H "Content-Type: application/json" \
           -d '{
                 "msgtype": "text",
                 "text": {
-                  "content": "BiliBili【'"${REPO}"'】Miao-Plugin 同步任务完成。\nmaster分支合并上游日志：\n'"${MERGE_LOG}"'\nmaster_test分支日志：'"${PANEL_LOG}"'\n模板新增列表：\n'"${PATCHED}"'"
+                  "content": "BiliBili【'"${REPO}"'】Miao-Plugin 同步任务完成。\nmaster分支合并上游日志：\n'"${MERGE_LOG}"'"
                 }
               }'
