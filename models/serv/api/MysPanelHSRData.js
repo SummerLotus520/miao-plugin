@@ -17,9 +17,8 @@ let MysPanelHSRData = {
       trees: MysPanelHSRData.getTrees(ds.skills),
       artis: MysPanelHSRData.getArtifact([ ...ds.relics, ...ds.ornaments ])
     }
-
+    avatar.md5 = Data.generateMD5(setData, "sr")
     avatar.setAvatar(setData, "mysPanelHSR")
-
     if (!avatar.attr) return avatar
     if (ds.properties[3].final - avatar.attr.speed > 0.2) {
       let errNum = Math.ceil((ds.properties[3].final - avatar.attr.speed) / 0.3)
@@ -28,6 +27,7 @@ let MysPanelHSRData = {
           lodash.forEach(ds.attrIds, (values, idx) => {
             if (values.startsWith("7")) {
               let [ id, time, time2 ] = values.split(",")
+              // 判断1：误差值/0.3大于0；判断2：限制0.3可出现的最大值；判断3：原速度的整数部分是否等于原速度+0.3的整数部分
               if (errNums > 0 && time2 < (time > 2 ? 6 : time * 2) && Math.floor((time * 2) + (time2 * 0.3)) === Math.floor((time * 2) + ((time2 * 1 + 1) * 0.3))) {
                 setData.artis[key].attrIds[idx] = `${id},${time},${time2 * 1 + 1}`
                 errNums--
@@ -41,6 +41,8 @@ let MysPanelHSRData = {
         if (errNum <= 0) break
         errNum = eachCalc(errNum)
       }
+      avatar.md5 = Data.generateMD5(setData, "sr")
+      // 这里静态attr没更新，但计算伤害时是正确的，先打个标记
       avatar.setAvatar(setData, "mysPanelHSR")
     }
     return avatar
@@ -49,8 +51,8 @@ let MysPanelHSRData = {
   getWeapon(data) {
     return {
       id: data.id,
-      level: data.level,
-      affix: data.rank
+      level: data.level, // 等级
+      affix: data.rank // 叠影
     }
   },
 
@@ -69,6 +71,8 @@ let MysPanelHSRData = {
     let ret = {}
     lodash.forEach(ds, (talent_data) => {
       const lv = talent_data.level
+      // 1 属性加成；2 aeqtz；3 额外能力；4 me mt
+      // if ([ 2, 3 ].includes(talent_data.point_type)) ret[remake[talent_data.remake]] = lv
       if (remake[talent_data.remake]) ret[remake[talent_data.remake]] = lv
     })
     if (cons >= 3) {
@@ -80,10 +84,8 @@ let MysPanelHSRData = {
     return ret
   },
 
-  getTrees (data) {
-    return lodash.map(lodash.filter(data,
-      skill => skill.point_type !== 2 && skill.is_activated
-    ), 'point_id')
+  getTrees(data) {
+    return lodash.sortBy(data.filter(skill => skill.point_type !== 2 && skill.is_activated), "point_id").map(skill => skill.point_id)
   },
 
   getArtifact(data) {
@@ -94,6 +96,7 @@ let MysPanelHSRData = {
       let arti = Artifact.get(ds.id, "sr")
       if (!arti) return true
 
+      // 只需要计算增益个数即可
       ret[idx] = {
         level: Math.min(15, (ds.level) || 0),
         id: ds.id,
