@@ -36,7 +36,8 @@ let DmgAttr = {
       })
     })
 
-    lodash.forEach((game === 'gs' ? 'a,a2,a3,e,q,nightsoul' : 'a,a2,a3,e,e2,q,q2,t,dot,break').split(','), (key) => {
+    // 技能属性记录
+    lodash.forEach((game === 'gs' ? 'a,a2,a3,e,q,nightsoul' : 'a,a2,a3,e,e2,xe,q,q2,t,me,me2,mt,mt2,dot,break').split(','), (key) => {
       ret[key] = ret[key] || {
         pct: 0, // 倍率加成
         multi: 0, // 独立倍率乘区加成，宵宫E等
@@ -84,6 +85,7 @@ let DmgAttr = {
         ret.spread = 0 // 蔓激化
         ret.lunarCharged = 0 // 月感电
         ret.lunarBloom = 0 // 月绽放
+        ret.lunarCrystallize = 0 // 月结晶
         ret.fykx = 0 // 敌人反应抗性降低
         ret.fyinc = 0 // 反应伤害值提升（百分比/不受精通加成）
         ret.fyplus = 0 // 反应伤害值提升（数值/不受精通加成）
@@ -170,7 +172,7 @@ let DmgAttr = {
         title = title.replace(`[${key}]`, Format.comma(val, 1))
 
         // 技能提高
-        let tRet = /^(a|a2|a3|e|q|t|dot|break|nightsoul)(Def|Ignore|Dmg|Enemydmg|Plus|Pct|Cpct|Cdmg|Multi|Elevated)$/.exec(key)
+        let tRet = /^(a|a2|a3|e|q|t|me|xe|mt|dot|break|nightsoul)(Def|Ignore|Dmg|Enemydmg|Plus|Pct|Cpct|Cdmg|Multi|Elevated)$/.exec(key)
         if (tRet) {
           attr[tRet[1]][tRet[2].toLowerCase()] += val * 1 || 0
           return
@@ -192,7 +194,7 @@ let DmgAttr = {
         if (key === 'enemyDef') { attr.enemy.def += val * 1 || 0; return }
         if (key === 'ignore' || key === 'enemyIgnore') { attr.enemy.ignore += val * 1 || 0; return }
 
-        if (['vaporize', 'melt', 'crystallize', 'burning', 'superConduct', 'swirl', 'electroCharged', 'shatter', 'overloaded', 'bloom', 'burgeon', 'hyperBloom', 'aggravate', 'spread', 'elevated', 'lunarCharged', 'lunarBloom', 'kx', 'fykx', 'multi', 'fyplus', 'fypct', 'fybase', 'fyinc'].includes(key)) {
+        if (['vaporize', 'melt', 'crystallize', 'burning', 'superConduct', 'swirl', 'electroCharged', 'shatter', 'overloaded', 'bloom', 'burgeon', 'hyperBloom', 'aggravate', 'spread', 'elevated', 'lunarCharged', 'lunarBloom', 'lunarCrystallize', 'kx', 'fykx', 'multi', 'fyplus', 'fypct', 'fybase', 'fyinc'].includes(key)) {
           attr[key] += val * 1 || 0
           return
         }
