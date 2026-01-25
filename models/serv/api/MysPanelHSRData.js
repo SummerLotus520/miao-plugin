@@ -1,7 +1,8 @@
-import lodash from "lodash"
+import { Meta } from "#miao"
+import { Character, Artifact, Weapon } from "#miao.models"
 import { propertyType2attrName } from "./MysPanelHSRMappings.js"
-import { Data, Meta } from "#miao"
-import { Character, Artifact } from "#miao.models"
+import lodash from "lodash"
+import Attr from "../../attr/Attr.js"
 
 let MysPanelHSRData = {
   setAvatar(player, ds) {
@@ -9,91 +10,186 @@ let MysPanelHSRData = {
     let avatar = player.getAvatar(ds.id, true)
     if (!char) return false
 
-    const setData = {
-      level: ds.level,
-      cons: ds.rank,
-      weapon: ds.equip ? MysPanelHSRData.getWeapon(ds.equip) : null,
-      talent: MysPanelHSRData.getTalent(char, ds.rank, ds.skills, ds.servant_detail?.servant_skills),
-      trees: MysPanelHSRData.getTrees(ds.skills),
-      artis: MysPanelHSRData.getArtifact([ ...ds.relics, ...ds.ornaments ])
+    // 同步主角名称
+    if (String(ds.id).startsWith("2")) {
+      ds.name = char.name
     }
 
-    avatar.setAvatar(setData, "mysPanelHSR")
+    let level = ds.level
+    // 计算角色和光锥的突破状态 (Promote)
+    let promote = Attr.calcPromote(level, "sr")
+    let weaponPromote = ds.equip ? Attr.calcPromote(ds.equip.level, "sr") : null
 
-    if (!avatar.attr) return avatar
-    if (ds.properties[3].final - avatar.attr.speed > 0.2) {
-      let errNum = Math.ceil((ds.properties[3].final - avatar.attr.speed) / 0.3)
-      let eachCalc = (errNums) => {
-        lodash.forEach(setData.artis, (ds, key) => {
-          lodash.forEach(ds.attrIds, (values, idx) => {
-            if (values.startsWith("7")) {
-              let [ id, time, time2 ] = values.split(",")
-              if (errNums > 0 && time2 < (time > 2 ? 6 : time * 2) && Math.floor((time * 2) + (time2 * 0.3)) === Math.floor((time * 2) + ((time2 * 1 + 1) * 0.3))) {
-                setData.artis[key].attrIds[idx] = `${id},${time},${time2 * 1 + 1}`
-                errNums--
+    // 针对特定等级（如60/70级）进行白值反推校验，确保突破状态正确
+    if ([20, 30, 40, 50, 60, 70].includes(level) || (ds.equip && [20, 30, 40, 50, 60, 70].includes(ds.equip.level))) {
+      let baseHp = 0
+      lodash.forEach(ds.properties, (p) => {
+        if (p.property_type === 1) baseHp = p.base * 1
+      })
+
+      if (baseHp > 0) {
+        let w = null
+        let check = true
+        if (ds.equip) {
+          w = Weapon.get(ds.equip.id, "sr")
+          if (!w) check = false
+        }
+
+        if (check) {
+          let charPromotes = [promote]
+          if ([20, 30, 40, 50, 60, 70].includes(level)) charPromotes.push(promote + 1)
+
+          let weaponPromotes = []
+          if (w) {
+            let wLv = ds.equip.level
+            let wPromote = weaponPromote
+            weaponPromotes = [wPromote]
+            if ([20, 30, 40, 50, 60, 70].includes(wLv)) weaponPromotes.push(wPromote + 1)
+          } else {
+            weaponPromotes = [null]
+          }
+
+          let minDiff = Infinity
+          let bestCP = promote
+          let bestWP = weaponPromote
+
+          // 遍历所有可能的突破组合，寻找误差最小的方案
+          for (let cp of charPromotes) {
+            for (let wp of weaponPromotes) {
+              let charAttr = char.getLvAttr(level, cp)
+              let wAttr = w ? w.calcAttr(ds.equip.level, wp) : { hp: 0 }
+              if (charAttr && wAttr) {
+                let diff = Math.abs(baseHp - (charAttr.hp + wAttr.hp))
+                if (diff < minDiff) {
+                  minDiff = diff
+                  bestCP = cp
+                  if (w) bestWP = wp
+                }
               }
             }
-          })
-        })
-        return errNums
+          }
+          promote = bestCP
+          if (w) weaponPromote = bestWP
+        }
       }
-      for (let i = 1; i <= 3; i++) {
-        if (errNum <= 0) break
-        errNum = eachCalc(errNum)
-      }
-      avatar.setAvatar(setData, "mysPanelHSR")
     }
+    promote = Math.min(promote, 6)
+
+    const setData = {
+      level,
+      promote,
+      cons: ds.rank,
+      weapon: ds.equip ? MysPanelHSRData.getWeapon(ds.equip, weaponPromote) : null,
+      talent: MysPanelHSRData.getTalent(
+        char,
+        ds.rank,
+        ds.skills,
+        ds.servant_detail?.servant_skills || []
+      ),
+      trees: MysPanelHSRData.getTrees(ds.skills),
+      artis: MysPanelHSRData.getArtifact([...ds.relics, ...ds.ornaments])
+    }
+    avatar.setAvatar(setData, "mysPanelHSR")
+
+    // 速度修正，整数对齐
+    const speedProp = lodash.find(ds.properties, p => [4].includes(p.property_type))
+    if (speedProp && avatar.attr?.speed) {
+      const targetSpeed = parseFloat(speedProp.final)
+      const currentSpeed = avatar.attr.speed
+      let speedDiff = targetSpeed - currentSpeed
+      // 如果面板速度与计算速度误差超过0.2，尝试修正
+      if (speedDiff > 0.2) {
+        let fixed = false
+        // 尝试分散修正，遍历所有圣遗物，每个速度词条加1步，直到补足差额
+        let loopCount = 0
+        while (speedDiff > 0.05 && loopCount < 20) {
+          let hasSpeed = false
+          lodash.forEach(setData.artis, (arti) => {
+            if (speedDiff <= 0.05) return false
+            lodash.forEach(arti.attrIds, (attr, idx) => {
+              if (speedDiff <= 0.05) return false
+              if (attr.startsWith("7,")) {
+                let [id, count, step] = attr.split(",")
+                step = parseInt(step) + 1
+                arti.attrIds[idx] = `${id},${count},${step}`
+                speedDiff -= (arti.star || 5) >= 5 ? 0.3 : 0.2
+                fixed = true
+                hasSpeed = true
+              }
+            })
+          })
+          if (!hasSpeed) break
+          loopCount++
+        }
+
+        if (fixed) {
+          avatar.setAvatar(setData, "mysPanelHSR")
+        }
+      }
+    }
+
     return avatar
   },
 
-  getWeapon(data) {
+  getWeapon(data, promote) {
     return {
       id: data.id,
-      level: data.level,
-      affix: data.rank
+      promote: Math.min(promote || 0, 6), // 突破
+      level: data.level, // 等级
+      affix: data.rank // 叠影
     }
   },
 
-  getTalent(char, cons, ds = [], servant = []) {
-    let { talentCons = {} } = char.meta
-    let remake = {
-      "普攻": "a",
-      "战技": "e",
-      "终结技": "q",
-      "天赋": "t",
-      "秘技": "z",
-      "忆灵技": "me",
-      "忆灵天赋": "mt"
-    }
-    if (servant.length > 0) ds = [ ...ds, ...servant ]
+  getTalent(char, cons, ds = {}, servant_skills = []) {
+    let { talentId = {}, talentCons = {} } = char.meta
+    let idx = 0
     let ret = {}
+    const skillKeys = ["a", "e", "q", "t", "z", "me", "mt"]
+    
+    // 处理主技能
     lodash.forEach(ds, (talent_data) => {
+      const id = talent_data.point_id
       const lv = talent_data.level
-      if (remake[talent_data.remake]) ret[remake[talent_data.remake]] = lv
+      let key
+      if (talentId[id]) {
+        key = talentId[id]
+        ret[key] = lv
+      } else if (talent_data.point_type == 2) {
+        key = skillKeys[idx] || `unk${idx}`
+        idx++
+        ret[key] = ret[key] || lv
+      }
     })
-    if (cons >= 3) {
-      lodash.forEach(talentCons, (lv, key) => {
-        let addTalent = { a: 1, e: 2, q: 2, t: 2, me: 1, mt: 1 }
-        if (lv != 0 && ret[key] && cons >= lv) ret[key] = Math.max(1, ret[key] - addTalent[key])
-      })
+
+    // 处理召唤物/追加攻击等级
+    if (Array.isArray(servant_skills) && servant_skills.length !== 0) {
+      let me = servant_skills[0]?.level ?? 0
+      let mt = servant_skills[1]?.level ?? 0
+      ret["me"] = me
+      ret["mt"] = mt
     }
+    
     return ret
   },
 
-  getTrees (data) {
+  getTrees(data) {
     return lodash.map(lodash.filter(data,
       skill => skill.point_type !== 2 && skill.is_activated
-    ), 'point_id')
+    ), "point_id")
   },
 
   getArtifact(data) {
     let ret = {}
     lodash.forEach(data, (ds) => {
       let idx = ds.pos
-      if (!idx) return
+      if (!idx) {
+        return
+      }
       let arti = Artifact.get(ds.id, "sr")
-      if (!arti) return true
-
+      if (!arti) {
+        return true
+      }
+      
       ret[idx] = {
         level: Math.min(15, (ds.level) || 0),
         id: ds.id,
@@ -107,33 +203,42 @@ let MysPanelHSRData = {
   getArtifactMainId(pos, main_property) {
     const { metaData } = Meta.getMeta("sr", "arti")
     const propertyName = propertyType2attrName[main_property.property_type]
-    const propertyName2Id = lodash.invert(metaData.mainIdx[pos])
+    const propertyName2Id = lodash.invert(metaData["mainIdx"][pos])
     const ret = +propertyName2Id[propertyName]
     return ret
   },
 
+  getArtifactAttrId(rarity, curTime, propertyType, valueStr) {
+    const { metaData } = Meta.getMeta("sr", "arti")
+    const propertyName = propertyType2attrName[propertyType]
+    const subAttrInfo = metaData["starData"][rarity]["sub"]
+    const propertyId = lodash.findKey(subAttrInfo, obj => obj.key === propertyName);
+    // base: 最大取值
+    // step: 减去的多少
+    const { base, step } = subAttrInfo[propertyId]
+    
+    let destValueSum
+    if (valueStr.substring(-1) == "%") {
+      destValueSum = parseFloat(valueStr.slice(0, -1))
+    } else {
+      destValueSum = parseFloat(valueStr);
+    }
+    
+    // 如果是速度，尝试修正强化次数(curTime)，避免因为取整导致的误差
+    if (propertyName === "speed") {
+       curTime = Math.floor(destValueSum / base) || 1
+    }
+
+    const numSteps = Math.round((destValueSum - (curTime * base)) / step)
+    return `${propertyId},${curTime},${numSteps}`;
+  },
+
   getArtifactAttrIds(rarity, sub_property_list) {
     let attrIds = []
-    const { metaData } = Meta.getMeta("sr", "arti")
-    const starData = metaData.starData[rarity]
-    const getArtifactAttrId = (sub, curTime, propertyId, valueStr) => {
-      const { key, base, step } = sub
-      let destValueSum
-      if (valueStr.substring(-1) == "%") {
-        destValueSum = parseFloat(valueStr.slice(0, -1))
-      } else {
-        destValueSum = parseFloat(valueStr)
-      }
-      if (key === "speed") curTime = Math.floor(destValueSum / base) || 1
-      const numSteps = Math.ceil((destValueSum - (curTime * base)) / step)
-      return `${propertyId},${curTime},${numSteps}`
-    }
     lodash.forEach(sub_property_list, (sub_property) => {
       const { property_type, value, times } = sub_property
-      const propertyId = lodash.findKey(starData.sub, obj => obj.key === propertyType2attrName[property_type])
-      const sub = starData.sub[propertyId]
-      const combination = getArtifactAttrId(sub, times, propertyId, value)
-      attrIds.push(combination)
+      const combination = MysPanelHSRData.getArtifactAttrId(rarity, times, property_type, value)
+      attrIds = [...attrIds, combination]
     })
     return attrIds
   }
