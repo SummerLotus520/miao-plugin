@@ -87,7 +87,6 @@ let DmgAttr = {
         ret.superBreak = {
           ignore: 0
         }
-        ret.joy = 0
       }
     }
 
@@ -141,7 +140,7 @@ let DmgAttr = {
       if (!lodash.isUndefined(buff.maxCons) && ds.cons * 1 > buff.maxCons * 1) return
       if (buff.tree && !ds.trees[`10${buff.tree}`]) return
 
-      let title = typeof buff.title === "function" ? buff.title(ds) : buff.title
+      let title = typeof buff.title === 'function' ? buff.title(ds) : buff.title
 
       if (buff.mastery) {
         let mKey = { vaporize: '蒸发', melt: '融化', swirl: '扩散' }
