@@ -32,7 +32,7 @@ let DmgAttr = {
       })
     })
 
-    lodash.forEach((game === 'gs' ? 'a,a2,a3,e,q,nightsoul' : 'a,a2,a3,e,e2,xe,q,q2,t,me,me2,mt,mt2,dot,break').split(','), (key) => {
+    lodash.forEach((game === 'gs' ? 'a,a2,a3,e,q,nightsoul' : 'a,a2,a3,e,e2,xe,q,q2,t,me,me2,mt,mt2,dot,break,elation').split(','), (key) => {
       ret[key] = ret[key] || {
         pct: 0,
         multi: 0,
@@ -42,6 +42,7 @@ let DmgAttr = {
         cpct: 0,
         cdmg: 0,
         elevated: 0,
+        merrymakes: 0,
         def: 0,
         ignore: 0
       }
@@ -87,6 +88,8 @@ let DmgAttr = {
         ret.superBreak = {
           ignore: 0
         }
+        ret.merrymakes = 0 // 增笑
+        ret.punchline = 0 // 笑点
       }
     }
 
@@ -164,7 +167,7 @@ let DmgAttr = {
         if (!val && val !== 0) return
         title = title.replace(`[${key}]`, Format.comma(val, 1))
 
-        let tRet = /^(a|a2|a3|e|q|t|me|xe|mt|dot|break|nightsoul)(Def|Ignore|Dmg|Enemydmg|Plus|Pct|Cpct|Cdmg|Multi|Elevated)$/.exec(key)
+        let tRet = /^(a|a2|a3|e|q|t|me|xe|mt|dot|break|nightsoul)(Def|Ignore|Dmg|Enemydmg|Plus|Pct|Cpct|Cdmg|Multi|Elevated|Merrymakes)$/.exec(key)
         if (tRet) {
           if (attr[tRet[1]]) {
             attr[tRet[1]][tRet[2].toLowerCase()] += val * 1 || 0
@@ -196,7 +199,7 @@ let DmgAttr = {
         if (key === 'enemyDef') { attr.enemy.def += val * 1 || 0; return }
         if (key === 'ignore' || key === 'enemyIgnore') { attr.enemy.ignore += val * 1 || 0; return }
 
-        if (['vaporize', 'melt', 'crystallize', 'burning', 'superConduct', 'swirl', 'electroCharged', 'shatter', 'overloaded', 'bloom', 'burgeon', 'hyperBloom', 'aggravate', 'spread', 'elevated', 'lunarCharged', 'lunarBloom', 'lunarCrystallize', 'kx', 'fykx', 'multi', 'fyplus', 'fypct', 'fybase', 'fyinc'].includes(key)) {
+        if (['vaporize', 'melt', 'crystallize', 'burning', 'superConduct', 'swirl', 'electroCharged', 'shatter', 'overloaded', 'bloom', 'burgeon', 'hyperBloom', 'aggravate', 'spread', 'elevated', 'lunarCharged', 'lunarBloom', 'lunarCrystallize', 'kx', 'fykx', 'multi', 'fyplus', 'fypct', 'fybase', 'fyinc', 'merrymakes', 'punchline'].includes(key)) {
           attr[key] += val * 1 || 0
           return
         }
