@@ -211,6 +211,7 @@ let MysPanelHSRData = {
       ret[idx] = {
         level: Math.min(15, (ds.level) || 0),
         id: ds.id,
+        star: ds.rarity || 5,
         mainId: MysPanelHSRData.getArtifactMainId(idx, ds.main_property),
         attrIds: MysPanelHSRData.getArtifactAttrIds(ds.rarity, ds.properties)
       }

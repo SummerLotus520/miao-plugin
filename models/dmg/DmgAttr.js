@@ -32,7 +32,7 @@ let DmgAttr = {
       })
     })
 
-    lodash.forEach((game === 'gs' ? 'a,a2,a3,e,q,nightsoul' : 'a,a2,a3,e,e2,xe,q,q2,t,me,me2,mt,mt2,dot,break,elation').split(','), (key) => {
+    lodash.forEach((game === 'gs' ? 'a,a2,a3,e,q,nightsoul' : 'a,a2,a3,e,e2,xe,xe2,q,q2,t,me,me2,mt,mt2,dot,break,elation').split(','), (key) => {
       ret[key] = ret[key] || {
         pct: 0,
         multi: 0,
@@ -167,7 +167,8 @@ let DmgAttr = {
         if (!val && val !== 0) return
         title = title.replace(`[${key}]`, Format.comma(val, 1))
 
-        let tRet = /^(a|a2|a3|e|q|t|me|xe|mt|dot|break|nightsoul)(Def|Ignore|Dmg|Enemydmg|Plus|Pct|Cpct|Cdmg|Multi|Elevated|Merrymakes)$/.exec(key)
+        // 技能提高
+        let tRet = /^(a|a2|a3|e|e2|q|q2|t|me|xe|xe2|mt|dot|break|nightsoul)(Def|Ignore|Dmg|Enemydmg|Plus|Pct|Cpct|Cdmg|Multi|Elevated|Merrymakes)$/.exec(key)
         if (tRet) {
           if (attr[tRet[1]]) {
             attr[tRet[1]][tRet[2].toLowerCase()] += val * 1 || 0
