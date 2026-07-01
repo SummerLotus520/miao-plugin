@@ -60,29 +60,30 @@ let DmgAttr = {
       ret.kx = 0
       ret.staticAttr = attr?.staticAttr || {}
       if (game === 'gs') {
-        ret.elevated = 0
-        ret.vaporize = 0
-        ret.melt = 0
-        ret.burning = 0
-        ret.crystallize = 0
-        ret.superConduct = 0
-        ret.swirl = 0
-        ret.electroCharged = 0
-        ret.shatter = 0
-        ret.overloaded = 0
-        ret.bloom = 0
-        ret.burgeon = 0
-        ret.hyperBloom = 0
-        ret.aggravate = 0
-        ret.spread = 0
-        ret.lunarCharged = 0
-        ret.lunarBloom = 0
-        ret.lunarCrystallize = 0
-        ret.fykx = 0
-        ret.fyinc = 0
-        ret.fyplus = 0
-        ret.fypct = 0
-        ret.fybase = 0
+        ret.elevated = 0 // 擢升
+        ret.vaporize = 0 // 蒸发
+        ret.melt = 0 // 融化
+        ret.burning = 0 // 燃烧
+        ret.crystallize = 0 // 结晶
+        ret.superConduct = 0 // 超导
+        ret.swirl = 0 // 扩散
+        ret.electroCharged = 0 // 感电
+        ret.shatter = 0 // 碎冰
+        ret.overloaded = 0 // 超载
+        ret.bloom = 0 // 绽放
+        ret.burgeon = 0 // 烈绽放
+        ret.hyperBloom = 0 // 超绽放
+        ret.aggravate = 0 // 超激化
+        ret.spread = 0 // 蔓激化
+        ret.lunarCharged = 0 // 月感电
+        ret.lunarBloom = 0 // 月绽放
+        ret.lunarCrystallize = 0 // 月结晶
+        ret.stellarConduct = 0 // 星超导
+        ret.fykx = 0 // 敌人反应抗性降低
+        ret.fyinc = 0 // 反应伤害值提升（百分比/不受精通加成）
+        ret.fyplus = 0 // 反应伤害值提升（数值/不受精通加成）
+        ret.fypct = 0 // 反应基础伤害值提升（百分比/受精通加成）
+        ret.fybase = 0 // 反应基础伤害值提升（数值/受精通加成）
       } else if (game === 'sr') {
         ret.sp = (char.sp || 0) * 1
         ret.superBreak = {
@@ -196,11 +197,26 @@ let DmgAttr = {
           }
           return
         }
-
-        if (key === 'enemyDef') { attr.enemy.def += val * 1 || 0; return }
-        if (key === 'ignore' || key === 'enemyIgnore') { attr.enemy.ignore += val * 1 || 0; return }
-
-        if (['vaporize', 'melt', 'crystallize', 'burning', 'superConduct', 'swirl', 'electroCharged', 'shatter', 'overloaded', 'bloom', 'burgeon', 'hyperBloom', 'aggravate', 'spread', 'elevated', 'lunarCharged', 'lunarBloom', 'lunarCrystallize', 'kx', 'fykx', 'multi', 'fyplus', 'fypct', 'fybase', 'fyinc', 'merrymakes', 'punchline'].includes(key)) {
+        if (key === 'enemyDef') {
+          attr.enemy.def += val * 1 || 0
+          return
+        }
+        
+        if (key === 'ignore' || key === 'enemyIgnore') {
+          attr.enemy.ignore += val * 1 || 0
+          return
+        }
+        
+        if ([
+          'vaporize', 'melt', 'crystallize', 'burning',
+          'superConduct', 'swirl', 'electroCharged', 'shatter',
+          'overloaded', 'bloom', 'burgeon', 'hyperBloom',
+          'aggravate', 'spread', 'elevated',
+          'lunarCharged', 'lunarBloom', 'lunarCrystallize',
+          'stellarConduct',
+          'kx', 'fykx', 'multi', 'fyplus', 'fypct',
+          'fybase', 'fyinc', 'merrymakes', 'punchline'
+        ].includes(key)) {
           attr[key] += val * 1 || 0
           return
         }
